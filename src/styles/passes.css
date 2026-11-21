@@ -380,11 +380,23 @@
 }
 
 .pass-meta-mess {
+  display: inline-block;
+  width: fit-content;
+  max-width: 55%;
+  margin-left: auto;
+  text-align: right;
   color: var(--accent-fg);
   background: var(--accent-soft);
-  padding: 3px 9px;
+  padding: 4px 10px;
   border-radius: 7px;
   font-weight: 700;
+  line-height: 1.3;
+  overflow-wrap: break-word;
+}
+
+.pass-meta-mess.is-long {
+  font-size: 0.72rem;
+  padding: 3px 8px;
 }
 
 .pass-meta-timing {

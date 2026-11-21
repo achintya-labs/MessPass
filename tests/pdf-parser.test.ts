@@ -563,7 +563,7 @@ describe('End-to-End Multi-Page PDF Parsing (pdfjs-dist + jsQR)', () => {
     ]);
     assert.deepEqual(meta, {
       rollNo: 'EE23B189',
-      mess: 'SGR Himalaya FF · Left Veg',
+      mess: 'SGR Himalaya FF Left Veg',
     });
 
     const missing = extractCouponMetadataFromLines(['BREAKFAST', 'S.No: 123']);

@@ -454,13 +454,13 @@ describe('Roll Number & Mess Metadata Persistence', () => {
         meal: 'B',
         id: '9334171079820',
         rollNo: 'EE23B189',
-        mess: 'SGR Himalaya FF · Left Veg',
+        mess: 'SGR Himalaya FF Left Veg',
       },
     ]);
     assert.equal(res.updated, 1);
 
     [coupon] = getCouponsForDate('2025-07-26');
     assert.equal(coupon.rollNo, 'EE23B189');
-    assert.equal(coupon.mess, 'SGR Himalaya FF · Left Veg');
+    assert.equal(coupon.mess, 'SGR Himalaya FF Left Veg');
   });
 });

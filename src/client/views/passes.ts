@@ -213,8 +213,12 @@ export async function renderPassesForSelectedDate(
     const rollHtml = coupon.rollNo
       ? `<span class="pass-meta-value">${escapeHtml(coupon.rollNo)}</span>`
       : `<span class="pass-meta-value pass-meta-unknown">Unknown</span>`;
+    const messClass =
+      coupon.mess.length > 18
+        ? 'pass-meta-value pass-meta-mess is-long'
+        : 'pass-meta-value pass-meta-mess';
     const messHtml = coupon.mess
-      ? `<span class="pass-meta-value pass-meta-mess">${escapeHtml(coupon.mess)}</span>`
+      ? `<span class="${messClass}">${escapeHtml(coupon.mess)}</span>`
       : `<span class="pass-meta-value pass-meta-unknown">Unknown</span>`;
 
     const mealClass = `meal-badge meal-${coupon.meal.toLowerCase()}`;
@@ -283,6 +287,20 @@ export async function renderPassesForSelectedDate(
 
   updateActiveDot(activePassIndex);
   requestAnimationFrame(() => {
+    passCarousel.querySelectorAll<HTMLElement>('.pass-meta-mess').forEach((el) => {
+      el.style.width = '';
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      const rects = Array.from(range.getClientRects());
+      if (rects.length > 1) {
+        const maxLine = Math.max(...rects.map((r) => r.width));
+        const cs = getComputedStyle(el);
+        const pad =
+          parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+        el.style.width = `${Math.ceil(maxLine + pad) + 1}px`;
+      }
+    });
+
     const slides = passCarousel.querySelectorAll<HTMLElement>('.pass-slide');
     const targetSlide = slides[activePassIndex];
     if (targetSlide && passCarousel.scrollWidth > passCarousel.clientWidth + 4) {

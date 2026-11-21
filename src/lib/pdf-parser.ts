@@ -145,7 +145,7 @@ export function extractCouponMetadataFromLines(lines: readonly string[]): {
 
   return {
     rollNo,
-    mess: messParts.filter(Boolean).join(' · '),
+    mess: messParts.filter(Boolean).join(' '),
   };
 }
 
