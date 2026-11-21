@@ -35,8 +35,13 @@ export function findNearestDateWithPasses(targetISO: string): string | null {
   return upcoming ?? dates[dates.length - 1];
 }
 
+const qrSvgCache = new Map<string, string>();
+
 export async function renderQrSvg(text: string): Promise<string> {
-  return QRCode.toString(text, {
+  const cached = qrSvgCache.get(text);
+  if (cached) return cached;
+
+  const svg = await QRCode.toString(text, {
     type: 'svg',
     margin: 2,
     errorCorrectionLevel: 'M',
@@ -45,4 +50,9 @@ export async function renderQrSvg(text: string): Promise<string> {
       light: '#ffffff',
     },
   });
+  if (qrSvgCache.size > 400) {
+    qrSvgCache.clear();
+  }
+  qrSvgCache.set(text, svg);
+  return svg;
 }

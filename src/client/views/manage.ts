@@ -29,6 +29,7 @@ import { showToast } from '../ui/toast';
 export interface ManageViewCallbacks {
   getSelectedDateISO: () => string;
   onViewImportedDate: (dateISO: string) => void;
+  onCouponsChanged?: () => void;
 }
 
 const statTotalEl = document.getElementById('stat-total') as HTMLSpanElement;
@@ -164,6 +165,7 @@ async function importPdfFiles(fileList: File[]): Promise<void> {
     }
 
     refreshStats();
+    callbacks?.onCouponsChanged?.();
 
     const failureHtml =
       allFailures.length > 0
@@ -346,6 +348,7 @@ export function initManageView(opts: ManageViewCallbacks): void {
       }
       const stats = mergeCoupons(coupons);
       refreshStats();
+    callbacks?.onCouponsChanged?.();
       showToast(
         `Restored: ${stats.added} added, ${stats.updated} updated, ${stats.duplicates} duplicates`,
         'success'
@@ -368,6 +371,7 @@ export function initManageView(opts: ManageViewCallbacks): void {
         const removed = deleteCouponsForDate(selectedDateISO);
         showToast(`Deleted ${removed} pass(es)`, 'info');
         refreshStats();
+    callbacks?.onCouponsChanged?.();
       }
     );
   });
@@ -383,6 +387,7 @@ export function initManageView(opts: ManageViewCallbacks): void {
         const removed = deleteExpiredCoupons();
         showToast(`Removed ${removed} expired pass(es)`, 'info');
         refreshStats();
+    callbacks?.onCouponsChanged?.();
       }
     );
   });
@@ -398,6 +403,7 @@ export function initManageView(opts: ManageViewCallbacks): void {
         const removed = wipeAllCoupons();
         showToast(`Wiped ${removed} pass(es)`, 'info');
         refreshStats();
+    callbacks?.onCouponsChanged?.();
       }
     );
   });

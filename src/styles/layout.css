@@ -33,8 +33,6 @@
   width: 26px;
   height: 26px;
   border-radius: 7px;
-  background: var(--primary);
-  color: var(--primary-fg);
   display: grid;
   place-items: center;
   flex-shrink: 0;

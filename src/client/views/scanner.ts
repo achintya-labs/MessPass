@@ -145,20 +145,29 @@ function handleScannedPayload(raw: string): void {
   }
 }
 
-function scanFrameLoop(): void {
+const SCAN_INTERVAL_MS = 140;
+const MAX_SCAN_WIDTH = 640;
+let lastDecodeTime = 0;
+
+function scanFrameLoop(now: number): void {
   if (!cameraStream) return;
 
   if (
+    now - lastDecodeTime >= SCAN_INTERVAL_MS &&
     scannerVideo.readyState === scannerVideo.HAVE_ENOUGH_DATA &&
     scannerVideo.videoWidth > 0 &&
     scannerVideo.videoHeight > 0
   ) {
+    lastDecodeTime = now;
     const ctx = scannerCanvas.getContext('2d', {
       willReadFrequently: true,
     });
     if (ctx) {
-      const w = scannerVideo.videoWidth;
-      const h = scannerVideo.videoHeight;
+      const vw = scannerVideo.videoWidth;
+      const vh = scannerVideo.videoHeight;
+      const scale = vw > MAX_SCAN_WIDTH ? MAX_SCAN_WIDTH / vw : 1;
+      const w = Math.round(vw * scale);
+      const h = Math.round(vh * scale);
       if (scannerCanvas.width !== w || scannerCanvas.height !== h) {
         scannerCanvas.width = w;
         scannerCanvas.height = h;

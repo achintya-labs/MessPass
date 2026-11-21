@@ -14,7 +14,10 @@
     "cf:dev": "astro build && wrangler dev",
     "deploy": "astro build && wrangler deploy",
     "cap:sync": "astro build && npx cap sync android",
-    "cap:open": "npx cap open android"
+    "cap:open": "npx cap open android",
+    "android:debug": "npm run cap:sync && cd android && ./gradlew assembleDebug",
+    "android:release": "npm run cap:sync && cd android && ./gradlew assembleRelease",
+    "android:install": "npm run cap:sync && cd android && ./gradlew installDebug"
   },
   "dependencies": {
     "@capacitor/core": "^8.6.2",

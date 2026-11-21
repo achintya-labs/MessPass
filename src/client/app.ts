@@ -30,6 +30,7 @@ const viewsByTab: Record<TabName, HTMLElement> = {
 };
 
 let activeTab: TabName = 'passes';
+let passesDirty = true;
 
 function switchTab(tab: TabName, options: { animate?: boolean } = {}): void {
   const { animate = true } = options;
@@ -68,7 +69,10 @@ function switchTab(tab: TabName, options: { animate?: boolean } = {}): void {
   }
 
   if (tab === 'passes') {
-    void renderPassesForSelectedDate();
+    if (passesDirty) {
+      passesDirty = false;
+      void renderPassesForSelectedDate();
+    }
   } else if (tab === 'manage') {
     refreshStats();
   }
@@ -113,16 +117,24 @@ initPassesView({
 });
 initScannerView({
   isScanTabActive: () => activeTab === 'scan',
-  onCouponsChanged: refreshStats,
+  onCouponsChanged: () => {
+    passesDirty = true;
+    refreshStats();
+  },
 });
 initManageView({
   getSelectedDateISO,
+  onCouponsChanged: () => {
+    passesDirty = true;
+  },
   onViewImportedDate: (dateISO) => {
+    passesDirty = true;
     setSelectedDateISO(dateISO, true);
     switchTab('passes');
   },
 });
 
+passesDirty = false;
 void renderPassesForSelectedDate({ autoSelectRelevant: true });
 void registerOfflineServiceWorker();
 initInstallPrompt();

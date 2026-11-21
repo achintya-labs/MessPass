@@ -35,10 +35,12 @@ export function initSwipeTabs(options: SwipeTabsOptions): void {
   let touchStartX = 0;
   let touchStartY = 0;
   let lastDx = 0;
+  let cachedWidth = 0;
   let dragAxis: 'none' | 'horizontal' | 'vertical' = 'none';
   let ignoreSwipe = false;
   let isSettling = false;
   let neighborTab: TabName | null = null;
+  let pendingRaf: number | null = null;
 
   const prepareNeighbor = (nextTab: TabName | null): void => {
     if (neighborTab === nextTab) return;
@@ -57,6 +59,35 @@ export function initSwipeTabs(options: SwipeTabsOptions): void {
     el.style.pointerEvents = 'none';
     el.style.transition = 'none';
     el.style.willChange = 'transform';
+  };
+
+  const applyDragFrame = (): void => {
+    pendingRaf = null;
+    if (dragAxis !== 'horizontal') return;
+
+    const dx = lastDx;
+    const activeTab = getActiveTab();
+    const idx = tabOrder.indexOf(activeTab);
+    const targetTab =
+      dx < 0 && idx < tabOrder.length - 1
+        ? tabOrder[idx + 1]
+        : dx > 0 && idx > 0
+          ? tabOrder[idx - 1]
+          : null;
+
+    prepareNeighbor(targetTab);
+
+    const currentView = viewsByTab[activeTab];
+    if (!targetTab) {
+      const damped = Math.max(-48, Math.min(48, dx * 0.22));
+      currentView.style.transform = `translate3d(${damped}px, 0, 0)`;
+      return;
+    }
+
+    currentView.style.transform = `translate3d(${dx}px, 0, 0)`;
+    const neighborView = viewsByTab[targetTab];
+    const offset = dx < 0 ? cachedWidth + dx : -cachedWidth + dx;
+    neighborView.style.transform = `translate3d(${offset}px, 0, 0)`;
   };
 
   document.addEventListener(
@@ -96,6 +127,7 @@ export function initSwipeTabs(options: SwipeTabsOptions): void {
           return;
         }
         dragAxis = 'horizontal';
+        cachedWidth = mainContent.clientWidth || window.innerWidth;
         mainContent.classList.add('is-swiping');
         const currentView = viewsByTab[getActiveTab()];
         currentView.style.transition = 'none';
@@ -104,36 +136,18 @@ export function initSwipeTabs(options: SwipeTabsOptions): void {
 
       if (dragAxis !== 'horizontal') return;
       lastDx = dx;
-
-      const activeTab = getActiveTab();
-      const idx = tabOrder.indexOf(activeTab);
-      const targetTab =
-        dx < 0 && idx < tabOrder.length - 1
-          ? tabOrder[idx + 1]
-          : dx > 0 && idx > 0
-            ? tabOrder[idx - 1]
-            : null;
-
-      prepareNeighbor(targetTab);
-
-      const width = mainContent.clientWidth || window.innerWidth;
-      const currentView = viewsByTab[activeTab];
-
-      if (!targetTab) {
-        const damped = Math.max(-48, Math.min(48, dx * 0.22));
-        currentView.style.transform = `translateX(${damped}px)`;
-        return;
+      if (pendingRaf === null) {
+        pendingRaf = requestAnimationFrame(applyDragFrame);
       }
-
-      currentView.style.transform = `translateX(${dx}px)`;
-      const neighborView = viewsByTab[targetTab];
-      const offset = dx < 0 ? width + dx : -width + dx;
-      neighborView.style.transform = `translateX(${offset}px)`;
     },
     { passive: true }
   );
 
   const finishSwipe = (): void => {
+    if (pendingRaf !== null) {
+      cancelAnimationFrame(pendingRaf);
+      pendingRaf = null;
+    }
     if (ignoreSwipe || dragAxis !== 'horizontal') {
       dragAxis = 'none';
       return;
@@ -142,7 +156,7 @@ export function initSwipeTabs(options: SwipeTabsOptions): void {
     isSettling = true;
 
     const activeTab = getActiveTab();
-    const width = mainContent.clientWidth || window.innerWidth;
+    const width = cachedWidth || mainContent.clientWidth || window.innerWidth;
     const threshold = Math.min(90, width * 0.24);
     const committedTab =
       neighborTab && Math.abs(lastDx) >= threshold ? neighborTab : null;
@@ -153,8 +167,8 @@ export function initSwipeTabs(options: SwipeTabsOptions): void {
     if (committedTab) {
       const targetView = viewsByTab[committedTab];
       targetView.style.transition = TRANSITION_CSS;
-      currentView.style.transform = `translateX(${lastDx < 0 ? -width : width}px)`;
-      targetView.style.transform = 'translateX(0px)';
+      currentView.style.transform = `translate3d(${lastDx < 0 ? -width : width}px, 0, 0)`;
+      targetView.style.transform = 'translate3d(0, 0, 0)';
 
       window.setTimeout(() => {
         resetViewStyles(currentView, true);
@@ -167,11 +181,11 @@ export function initSwipeTabs(options: SwipeTabsOptions): void {
       return;
     }
 
-    currentView.style.transform = 'translateX(0px)';
+    currentView.style.transform = 'translate3d(0, 0, 0)';
     const prevNeighbor = neighborTab ? viewsByTab[neighborTab] : null;
     if (prevNeighbor) {
       prevNeighbor.style.transition = TRANSITION_CSS;
-      prevNeighbor.style.transform = `translateX(${lastDx < 0 ? width : -width}px)`;
+      prevNeighbor.style.transform = `translate3d(${lastDx < 0 ? width : -width}px, 0, 0)`;
     }
 
     window.setTimeout(() => {
