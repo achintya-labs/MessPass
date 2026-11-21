@@ -85,10 +85,14 @@ jobs:
         run: |
           TAG="${GITHUB_REF_NAME}"
           APK="${{ steps.build_apk.outputs.apk_path }}"
+          PRERELEASE_FLAG=""
+          if [[ "$TAG" == *"-beta"* ]]; then
+            PRERELEASE_FLAG="--prerelease"
+          fi
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" "$APK" --clobber
           else
-            gh release create "$TAG" "$APK" --generate-notes --title "$TAG"
+            gh release create "$TAG" "$APK" --generate-notes --title "$TAG" $PRERELEASE_FLAG
           fi
 
       - name: Deploy to Cloudflare

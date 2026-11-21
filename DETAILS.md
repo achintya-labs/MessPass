@@ -106,6 +106,7 @@ Web and Android share the exact same UI, with native-only behaviors gated behind
 | **`v*` (standard)** | `v1.0.0` | Yes | Yes | Yes |
 | **`v*-web*`** | `v1.0.1-web` | Yes | **Skipped** | Yes |
 | **`v*-app*`** | `v1.0.1-app` | Yes | Yes | **Skipped** |
+| **`v*-beta*`** | `v1.0.0-beta`, `v1.0.0-beta-app` | Yes | Marks GitHub Release as **Pre-release** (unless `-web`) | Unless `-app` |
 
 ### Required GitHub Secrets
 Configure under **Settings → Secrets and variables → Actions**:
