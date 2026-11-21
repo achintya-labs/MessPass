@@ -1,4 +1,4 @@
-package com.messpass.app;
+package dev.arstuff.messpass;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;

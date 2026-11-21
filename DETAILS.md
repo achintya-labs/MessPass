@@ -9,7 +9,7 @@ This document covers the full build pipeline, Android/Capacitor packaging, signi
 Mess Pass is built from a single codebase (`src/`) that compiles into a 100% static bundle in `dist/` via Astro/Vite:
 
 - **Web / PWA:** `dist/` is deployed directly to Cloudflare (`wrangler.jsonc`) with an offline Service Worker (`public/sw.js`) and Web App Manifest (`public/manifest.json`).
-- **Android App:** Capacitor 8 (`capacitor.config.ts`, `appId: com.messpass.app`) copies `dist/` into `android/app/src/main/assets/public/` and packages it as a native Android WebView app.
+- **Android App:** Capacitor 8 (`capacitor.config.ts`, `appId: dev.arstuff.messpass`) copies `dist/` into `android/app/src/main/assets/public/` and packages it as a native Android WebView app.
 
 ---
 
@@ -72,7 +72,7 @@ Keep `messpass-release.jks` and its passwords backed up securely. Losing the key
 If none are provided, `buildTypes.release` builds `app-release-unsigned.apk` without failing.
 
 ### Debug vs. Release Nuances
-- **Different Signatures:** `debug` is signed with `~/.android/debug.keystore`; `release` is signed with `messpass-release.jks`. Because both share `applicationId "com.messpass.app"`, you must uninstall the debug APK from your phone before installing a signed release APK (and vice versa).
+- **Different Signatures:** `debug` is signed with `~/.android/debug.keystore`; `release` is signed with `messpass-release.jks`. Because both share `applicationId "dev.arstuff.messpass"`, you must uninstall the debug APK from your phone before installing a signed release APK (and vice versa).
 - **`minifyEnabled false`:** Kept at Capacitor's default in `android/app/build.gradle`. Your TypeScript/CSS is already minified by Astro/Vite in `dist/`, while Capacitor plugins expose Java methods to JS via reflection annotations (`@CapacitorPlugin`, `@PluginMethod`) that R8 can strip without custom ProGuard rules.
 
 ---

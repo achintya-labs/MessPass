@@ -27,10 +27,10 @@ def releaseKeyPassword = System.getenv('KEY_PASSWORD') ?: envProperties['KEY_PAS
 def hasReleaseSigning = releaseStoreFile && releaseStorePassword && releaseKeyAlias && releaseKeyPassword
 
 android {
-    namespace = "com.messpass.app"
+    namespace = "dev.arstuff.messpass"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.messpass.app"
+        applicationId "dev.arstuff.messpass"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

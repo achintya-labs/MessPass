@@ -44,7 +44,7 @@ npm run deploy       # Build dist/ and deploy to Cloudflare
 
 ## Android App (Capacitor)
 
-The `android/` project wraps the static `dist/` build using Capacitor 8 (`appId: com.messpass.app`).
+The `android/` project wraps the static `dist/` build using Capacitor 8 (`appId: dev.arstuff.messpass`).
 
 ### Prerequisites
 - **JDK 21** (Capacitor 8 uses Gradle `8.14.3` + AGP `8.13.0`, which require Java 17–24 and will not run on Java 25. If your system defaults to a newer JDK, point `org.gradle.java.home` in `android/gradle.properties` to JDK 21 or Android Studio's bundled `jbr/`.)
@@ -152,7 +152,7 @@ npm run android:install    # Build, sync, and install debug APK onto connected d
 │   │   ├── build.gradle        # Android build types & .env/env/keystore signing config
 │   │   └── src/main/
 │   │       ├── AndroidManifest.xml
-│   │       ├── java/com/messpass/app/MainActivity.java
+│   │       ├── java/dev/arstuff/messpass/MainActivity.java
 │   │       └── res/            # Adaptive launcher icons, splash screens, styles
 │   └── build.gradle            # Top-level AGP & Gradle configuration
 ├── tests/                      # Node test runner suites (storage, PDF, QR transfer, PWA/build)
