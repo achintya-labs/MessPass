@@ -1,0 +1,3321 @@
+---
+// 100% static, offline-first Mess Pass web application
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#000000" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta
+      name="description"
+      content="100% offline-first daily mess QR coupon wallet"
+    />
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+    <title>Mess Pass</title>
+  </head>
+  <body>
+    <div class="app-shell">
+      <!-- Compact Top Header -->
+      <header class="app-header">
+        <div class="header-inner">
+          <div class="brand">
+            <div class="brand-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none">
+                <rect
+                  x="3"
+                  y="3"
+                  width="7"
+                  height="7"
+                  rx="1.5"
+                  stroke="currentColor"
+                  stroke-width="2"></rect>
+                <rect
+                  x="14"
+                  y="3"
+                  width="7"
+                  height="7"
+                  rx="1.5"
+                  stroke="currentColor"
+                  stroke-width="2"></rect>
+                <rect
+                  x="3"
+                  y="14"
+                  width="7"
+                  height="7"
+                  rx="1.5"
+                  stroke="currentColor"
+                  stroke-width="2"></rect>
+                <rect x="14" y="14" width="3" height="3" rx="0.5" fill="currentColor"
+                ></rect>
+                <rect x="18" y="18" width="3" height="3" rx="0.5" fill="currentColor"
+                ></rect>
+                <rect x="18" y="14" width="3" height="2.5" rx="0.5" fill="currentColor"
+                ></rect>
+              </svg>
+            </div>
+            <h1 class="brand-title">Mess Pass</h1>
+          </div>
+
+          <!-- Desktop Top Navigation -->
+          <nav class="desktop-nav" aria-label="Primary Navigation">
+            <button
+              type="button"
+              class="nav-item is-active"
+              data-tab="passes"
+              aria-current="page"
+            >
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span>Passes</span>
+            </button>
+
+            <button type="button" class="nav-item" data-tab="scan">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+                <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+                <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+                <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+                <line x1="7" y1="12" x2="17" y2="12"></line>
+              </svg>
+              <span>Scan</span>
+            </button>
+
+            <button type="button" class="nav-item" data-tab="manage">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <span>Manage</span>
+            </button>
+          </nav>
+
+          <div class="header-actions">
+            <a
+              id="github-link"
+              class="github-link"
+              href="https://github.com/achintya-labs/MessPass"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="View source on GitHub"
+              title="GitHub"
+            >
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2Z"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Views -->
+      <main class="main-content">
+        <!-- VIEW 1: PASSES -->
+        <section id="view-passes" class="view is-active" aria-label="Daily Passes">
+          <div class="passes-toolbar">
+            <div class="day-summary-row">
+              <span id="day-readable" class="day-readable"></span>
+              <span id="day-pass-count" class="day-pass-count"></span>
+            </div>
+
+            <!-- Minimal Date Selector Controls -->
+            <div class="date-bar" role="region" aria-label="Date Selector">
+              <label
+                id="calendar-trigger"
+                class="subtle-icon-btn date-icon-wrap"
+                title="Pick date"
+                aria-label="Pick date"
+              >
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="3" y="4" width="18" height="18" rx="2.5"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <input type="date" id="date-picker" class="date-input-hidden" aria-label="Select date" />
+              </label>
+
+              <button
+                type="button"
+                id="btn-prev-day"
+                class="subtle-icon-btn"
+                aria-label="Previous day"
+                title="Previous day"
+              >
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+
+              <button
+                type="button"
+                id="btn-next-day"
+                class="subtle-icon-btn"
+                aria-label="Next day"
+                title="Next day"
+              >
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+
+              <button type="button" id="btn-today" class="today-btn">Today</button>
+            </div>
+          </div>
+
+          <!-- Quick Saved Dates Strip -->
+          <div
+            id="date-chips-bar"
+            class="date-chips-bar"
+            role="region"
+            aria-label="Dates with saved passes"
+            hidden
+          ></div>
+
+          <!-- Swipeable Carousel (mobile) / Responsive Grid (desktop) -->
+          <div id="passes-stage" class="passes-stage">
+            <div
+              id="pass-carousel"
+              class="pass-carousel"
+              role="region"
+              aria-label="Day's mess coupons"
+            >
+            </div>
+            <div
+              id="carousel-dots"
+              class="carousel-dots"
+              role="tablist"
+              aria-label="Pass pagination"
+            >
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div id="passes-empty" class="empty-state" hidden>
+            <div class="empty-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="3"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <h2 id="empty-title" class="empty-title">No passes for this date</h2>
+            <p class="empty-desc">
+              Import your coupon PDF or scan a mess QR code to get started.
+            </p>
+            <div id="empty-jump-wrap" class="empty-jump-wrap" hidden>
+              <button type="button" id="btn-jump-date" class="btn btn-sm btn-primary">
+                Jump to nearest pass
+              </button>
+            </div>
+            <div class="empty-actions">
+              <button type="button" id="btn-empty-import" class="btn btn-sm btn-secondary">
+                Import PDF
+              </button>
+              <button type="button" id="btn-empty-scan" class="btn btn-sm btn-secondary">
+                Scan QR
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 2: CAMERA QR SCANNER -->
+        <section id="view-scan" class="view" aria-label="Camera QR Scanner" hidden>
+          <div class="scan-layout">
+            <div class="panel scan-camera-panel">
+              <div class="panel-header">
+                <div>
+                  <h2 class="panel-title">QR Scanner</h2>
+                  <p class="panel-subtitle">
+                    Scan mess coupons or <code>MC1:</code> transfer QRs
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  id="btn-toggle-camera"
+                  class="btn btn-sm btn-secondary"
+                >
+                  Start Camera
+                </button>
+              </div>
+
+              <!-- Camera Preview -->
+              <div class="camera-box" id="camera-box">
+                <video
+                  id="scanner-video"
+                  class="scanner-video"
+                  playsinline
+                  muted
+                  autoplay
+                ></video>
+                <canvas id="scanner-canvas" hidden></canvas>
+                <div class="scanner-overlay" aria-hidden="true">
+                  <div class="scanner-reticle"></div>
+                </div>
+                <div id="camera-placeholder" class="camera-placeholder">
+                  <p id="camera-status-text">Tap "Start Camera" to scan QR codes</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel scan-controls-panel">
+              <!-- Meal Tag Selector -->
+              <div class="meal-selector-block">
+                <span class="field-label">Meal Tag</span>
+                <div
+                  id="scan-meal-group"
+                  class="segmented-control"
+                  role="radiogroup"
+                  aria-label="Meal tag"
+                >
+                  <button
+                    type="button"
+                    class="seg-btn is-selected"
+                    data-meal="AUTO"
+                    aria-checked="true"
+                    role="radio"
+                  >
+                    Auto
+                  </button>
+                  <button
+                    type="button"
+                    class="seg-btn"
+                    data-meal="B"
+                    aria-checked="false"
+                    role="radio"
+                  >
+                    Breakfast
+                  </button>
+                  <button
+                    type="button"
+                    class="seg-btn"
+                    data-meal="L"
+                    aria-checked="false"
+                    role="radio"
+                  >
+                    Lunch
+                  </button>
+                  <button
+                    type="button"
+                    class="seg-btn"
+                    data-meal="S"
+                    aria-checked="false"
+                    role="radio"
+                  >
+                    Snacks
+                  </button>
+                  <button
+                    type="button"
+                    class="seg-btn"
+                    data-meal="D"
+                    aria-checked="false"
+                    role="radio"
+                  >
+                    Dinner
+                  </button>
+                </div>
+                <p class="field-hint">
+                  Leave on <strong>Auto</strong> to preserve existing tags, or pick a meal to tag scanned passes.
+                </p>
+              </div>
+
+              <!-- Scan Feedback -->
+              <div id="scan-feedback" class="feedback-banner" hidden></div>
+
+              <!-- Transfer Chunk Assembly Progress -->
+              <div id="transfer-rx-card" class="transfer-rx-card" hidden>
+                <div class="transfer-rx-header">
+                  <div>
+                    <strong>Device Transfer</strong>
+                    <div id="transfer-rx-count" class="muted-text">0 / 0 chunks</div>
+                  </div>
+                  <button
+                    type="button"
+                    id="btn-reset-rx"
+                    class="btn btn-sm btn-ghost"
+                  >
+                    Reset
+                  </button>
+                </div>
+                <div id="transfer-rx-pills" class="chunk-pills"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 3: MANAGE (IMPORT / EXPORT / DELETE) -->
+        <section id="view-manage" class="view" aria-label="Manage Coupons" hidden>
+          <!-- Storage Footprint Card -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title">Local Storage</h2>
+                <p class="panel-subtitle">
+                  Stored privately on this device (<code>mc_v1</code>)
+                </p>
+              </div>
+            </div>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <span class="stat-value" id="stat-total">0</span>
+                <span class="stat-label">Passes</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="stat-dates">0</span>
+                <span class="stat-label">Days</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="stat-expired">0</span>
+                <span class="stat-label">Expired</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="stat-bytes">0 B</span>
+                <span class="stat-label">Size</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="manage-columns">
+            <!-- PDF Ingestion Card -->
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <h2 class="panel-title">Import PDF</h2>
+                  <p class="panel-subtitle">
+                    Extracts meal &amp; QR code from each page offline
+                  </p>
+                </div>
+              </div>
+
+              <label class="file-dropzone" id="pdf-dropzone">
+                <input
+                  type="file"
+                  id="pdf-file-input"
+                  accept=".pdf,application/pdf"
+                  multiple
+                  hidden
+                />
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="12" y1="18" x2="12" y2="12"></line>
+                  <polyline points="9 15 12 12 15 15"></polyline>
+                </svg>
+                <span class="dropzone-title">Drop PDF here or click to browse</span>
+                <span class="dropzone-hint">Processed 100% offline</span>
+              </label>
+
+              <div id="pdf-progress-wrap" class="progress-wrap" hidden>
+                <div class="progress-meta">
+                  <span id="pdf-progress-label">Reading PDF...</span>
+                  <span id="pdf-progress-pct">0%</span>
+                </div>
+                <div class="progress-track">
+                  <div id="pdf-progress-bar" class="progress-bar" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <div id="pdf-result" class="pdf-result" hidden></div>
+            </div>
+
+            <!-- Device Transfer & Backup Card -->
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <h2 class="panel-title">Transfer &amp; Backup</h2>
+                  <p class="panel-subtitle">
+                    Move passes via QR or <code>.txt</code> file
+                  </p>
+                </div>
+              </div>
+
+              <div class="action-stack">
+                <button
+                  type="button"
+                  id="btn-show-transfer-qr"
+                  class="btn btn-primary btn-full"
+                >
+                  Show Transfer QR
+                </button>
+
+                <div class="action-row">
+                  <button
+                    type="button"
+                    id="btn-export-txt"
+                    class="btn btn-compact btn-secondary"
+                  >
+                    Download Backup (.txt)
+                  </button>
+                  <label class="btn btn-compact btn-secondary file-btn-label">
+                    Restore Backup (.txt)
+                    <input
+                      type="file"
+                      id="txt-restore-input"
+                      accept=".txt,text/plain"
+                      hidden
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bulk Deletion Card -->
+          <div class="panel panel-danger">
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title">Cleanup</h2>
+                <p class="panel-subtitle">Delete old or unwanted passes</p>
+              </div>
+            </div>
+
+            <div class="action-stack danger-actions-grid">
+              <button
+                type="button"
+                id="btn-delete-selected-date"
+                class="btn btn-compact btn-danger-outline btn-full"
+              >
+                Delete Selected Date
+              </button>
+              <button
+                type="button"
+                id="btn-delete-expired"
+                class="btn btn-compact btn-danger-outline btn-full"
+              >
+                Delete Expired
+              </button>
+              <button
+                type="button"
+                id="btn-wipe-all"
+                class="btn btn-compact btn-danger btn-full"
+              >
+                Wipe All
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Mobile Bottom Navigation -->
+      <nav class="bottom-nav" aria-label="Primary Navigation">
+        <button
+          type="button"
+          class="nav-item is-active"
+          data-tab="passes"
+          aria-current="page"
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span>Passes</span>
+        </button>
+
+        <button type="button" class="nav-item" data-tab="scan">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+            <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+            <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+            <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+            <line x1="7" y1="12" x2="17" y2="12"></line>
+          </svg>
+          <span>Scan</span>
+        </button>
+
+        <button type="button" class="nav-item" data-tab="manage">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          <span>Manage</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Transfer QR Modal -->
+    <div
+      id="transfer-modal"
+      class="modal-backdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="transfer-modal-title"
+      hidden
+    >
+      <div class="modal-card">
+        <div class="modal-header">
+          <div>
+            <h2 id="transfer-modal-title" class="modal-title">Transfer QR</h2>
+            <p id="transfer-modal-meta" class="modal-subtitle"></p>
+          </div>
+          <button
+            type="button"
+            id="btn-close-transfer"
+            class="subtle-icon-btn"
+            aria-label="Close transfer QR modal"
+          >
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div class="transfer-qr-frame">
+          <div id="transfer-qr-svg" class="qr-svg-host"></div>
+        </div>
+
+        <div class="transfer-controls">
+          <button
+            type="button"
+            id="btn-transfer-prev"
+            class="btn btn-sm btn-secondary"
+          >
+            &larr; Prev
+          </button>
+          <span id="transfer-chunk-label" class="chunk-counter">1 / 1</span>
+          <button
+            type="button"
+            id="btn-transfer-next"
+            class="btn btn-sm btn-primary"
+          >
+            Next &rarr;
+          </button>
+        </div>
+
+        <p class="transfer-tip">
+          Open <strong>Scan</strong> on the receiving device and scan each chunk in any order.
+        </p>
+      </div>
+    </div>
+
+    <!-- Confirmation Dialog Modal -->
+    <div
+      id="confirm-modal"
+      class="modal-backdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="confirm-title"
+      hidden
+    >
+      <div class="modal-card modal-card-sm">
+        <h2 id="confirm-title" class="modal-title">Confirm</h2>
+        <p id="confirm-message" class="confirm-message"></p>
+        <div class="confirm-actions">
+          <button type="button" id="btn-confirm-cancel" class="btn btn-sm btn-secondary">
+            Cancel
+          </button>
+          <button type="button" id="btn-confirm-ok" class="btn btn-sm btn-danger">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+    <script>
+      import QRCode from 'qrcode';
+      import jsQR from 'jsqr';
+      import {
+        MEAL_LABELS,
+        MEAL_TIMING_LABELS,
+        createBackupFileContent,
+        createTransferChunks,
+        decompressTransferData,
+        deleteCoupon,
+        deleteCouponsForDate,
+        deleteExpiredCoupons,
+        epochDaysToDisplayDate,
+        getAvailableDates,
+        getCouponsForDate,
+        getRelevantMealForTime,
+        getStorageStats,
+        getTodayLocalISO,
+        isoToEpochDays,
+        mergeCoupons,
+        parseBackupFileContent,
+        parseCouponPayload,
+        parseTransferChunk,
+        shiftISODate,
+        wipeAllCoupons,
+        type Coupon,
+        type MealType,
+      } from '../lib/storage';
+      import {
+        PDF_WORKER_URL,
+        parseCouponsFromPDF,
+        type PdfPageFailure,
+      } from '../lib/pdf-parser';
+
+      type TabName = 'passes' | 'scan' | 'manage';
+      type ScanMealOption = 'AUTO' | 'B' | 'L' | 'S' | 'D';
+
+      // --- State ---
+      let activeTab: TabName = 'passes';
+      let selectedDateISO: string = getTodayLocalISO();
+      let activePassIndex = 0;
+      let currentDayCoupons: Coupon[] = [];
+
+      // Scanner state
+      let scanMealOption: ScanMealOption = 'AUTO';
+      let cameraStream: MediaStream | null = null;
+      let scanRafId: number | null = null;
+      let lastScannedRaw = '';
+      let lastScannedTime = 0;
+      let rxSession: { total: number; parts: Map<number, string> } | null = null;
+
+      // Transfer modal state
+      let transferChunks: string[] = [];
+      let transferChunkIndex = 0;
+
+      // Confirm modal state
+      let pendingConfirmAction: (() => void) | null = null;
+
+      // Toast timer
+      let toastTimer: number | null = null;
+
+      // --- DOM Elements ---
+      const viewPasses = document.getElementById('view-passes') as HTMLElement;
+      const viewScan = document.getElementById('view-scan') as HTMLElement;
+      const viewManage = document.getElementById('view-manage') as HTMLElement;
+      const navButtons = Array.from(
+        document.querySelectorAll<HTMLButtonElement>('.nav-item')
+      );
+
+      // Passes DOM
+      const btnPrevDay = document.getElementById('btn-prev-day') as HTMLButtonElement;
+      const btnNextDay = document.getElementById('btn-next-day') as HTMLButtonElement;
+      const btnToday = document.getElementById('btn-today') as HTMLButtonElement;
+      const calendarTrigger = document.getElementById('calendar-trigger') as HTMLLabelElement;
+      const datePicker = document.getElementById('date-picker') as HTMLInputElement;
+      const dayReadableEl = document.getElementById('day-readable') as HTMLSpanElement;
+      const dayPassCountEl = document.getElementById('day-pass-count') as HTMLSpanElement;
+      const dateChipsBar = document.getElementById('date-chips-bar') as HTMLDivElement;
+      const passesStage = document.getElementById('passes-stage') as HTMLDivElement;
+      const passCarousel = document.getElementById('pass-carousel') as HTMLDivElement;
+      const carouselDots = document.getElementById('carousel-dots') as HTMLDivElement;
+      const passesEmpty = document.getElementById('passes-empty') as HTMLDivElement;
+      const emptyTitle = document.getElementById('empty-title') as HTMLHeadingElement;
+      const emptyJumpWrap = document.getElementById('empty-jump-wrap') as HTMLDivElement;
+      const btnJumpDate = document.getElementById('btn-jump-date') as HTMLButtonElement;
+      const btnEmptyImport = document.getElementById('btn-empty-import') as HTMLButtonElement;
+      const btnEmptyScan = document.getElementById('btn-empty-scan') as HTMLButtonElement;
+
+      // Scanner DOM
+      const btnToggleCamera = document.getElementById('btn-toggle-camera') as HTMLButtonElement;
+      const scanMealButtons = Array.from(
+        document.querySelectorAll<HTMLButtonElement>('#scan-meal-group .seg-btn')
+      );
+      const scannerVideo = document.getElementById('scanner-video') as HTMLVideoElement;
+      const scannerCanvas = document.getElementById('scanner-canvas') as HTMLCanvasElement;
+      const cameraPlaceholder = document.getElementById('camera-placeholder') as HTMLDivElement;
+      const cameraStatusText = document.getElementById('camera-status-text') as HTMLParagraphElement;
+      const scanFeedback = document.getElementById('scan-feedback') as HTMLDivElement;
+      const transferRxCard = document.getElementById('transfer-rx-card') as HTMLDivElement;
+      const transferRxCount = document.getElementById('transfer-rx-count') as HTMLDivElement;
+      const transferRxPills = document.getElementById('transfer-rx-pills') as HTMLDivElement;
+      const btnResetRx = document.getElementById('btn-reset-rx') as HTMLButtonElement;
+
+      // Manage DOM
+      const statTotalEl = document.getElementById('stat-total') as HTMLSpanElement;
+      const statDatesEl = document.getElementById('stat-dates') as HTMLSpanElement;
+      const statExpiredEl = document.getElementById('stat-expired') as HTMLSpanElement;
+      const statBytesEl = document.getElementById('stat-bytes') as HTMLSpanElement;
+
+      const pdfDropzone = document.getElementById('pdf-dropzone') as HTMLLabelElement;
+      const pdfFileInput = document.getElementById('pdf-file-input') as HTMLInputElement;
+      const pdfProgressWrap = document.getElementById('pdf-progress-wrap') as HTMLDivElement;
+      const pdfProgressLabel = document.getElementById('pdf-progress-label') as HTMLSpanElement;
+      const pdfProgressPct = document.getElementById('pdf-progress-pct') as HTMLSpanElement;
+      const pdfProgressBar = document.getElementById('pdf-progress-bar') as HTMLDivElement;
+      const pdfResultEl = document.getElementById('pdf-result') as HTMLDivElement;
+
+      const btnShowTransferQr = document.getElementById('btn-show-transfer-qr') as HTMLButtonElement;
+      const btnExportTxt = document.getElementById('btn-export-txt') as HTMLButtonElement;
+      const txtRestoreInput = document.getElementById('txt-restore-input') as HTMLInputElement;
+
+      const btnDeleteSelectedDate = document.getElementById('btn-delete-selected-date') as HTMLButtonElement;
+      const btnDeleteExpired = document.getElementById('btn-delete-expired') as HTMLButtonElement;
+      const btnWipeAll = document.getElementById('btn-wipe-all') as HTMLButtonElement;
+
+      // Transfer modal DOM
+      const transferModal = document.getElementById('transfer-modal') as HTMLDivElement;
+      const transferModalMeta = document.getElementById('transfer-modal-meta') as HTMLParagraphElement;
+      const transferQrSvgHost = document.getElementById('transfer-qr-svg') as HTMLDivElement;
+      const transferChunkLabel = document.getElementById('transfer-chunk-label') as HTMLSpanElement;
+      const btnTransferPrev = document.getElementById('btn-transfer-prev') as HTMLButtonElement;
+      const btnTransferNext = document.getElementById('btn-transfer-next') as HTMLButtonElement;
+      const btnCloseTransfer = document.getElementById('btn-close-transfer') as HTMLButtonElement;
+
+      // Confirm modal DOM
+      const confirmModal = document.getElementById('confirm-modal') as HTMLDivElement;
+      const confirmTitle = document.getElementById('confirm-title') as HTMLHeadingElement;
+      const confirmMessage = document.getElementById('confirm-message') as HTMLParagraphElement;
+      const btnConfirmCancel = document.getElementById('btn-confirm-cancel') as HTMLButtonElement;
+      const btnConfirmOk = document.getElementById('btn-confirm-ok') as HTMLButtonElement;
+
+      // Toast DOM
+      const toastEl = document.getElementById('toast') as HTMLDivElement;
+
+      // --- Helpers ---
+      function escapeHtml(str: string): string {
+        return str
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function formatBytes(bytes: number): string {
+        if (bytes < 1024) return `${bytes} B`;
+        if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+        return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+      }
+
+      function formatReadableDate(iso: string): string {
+        const epoch = isoToEpochDays(iso);
+        if (epoch === null) return iso;
+        const d = new Date(epoch * 86_400_000);
+        const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        return `${weekdays[d.getUTCDay()]}, ${epochDaysToDisplayDate(epoch)}`;
+      }
+
+      function showToast(message: string, variant: 'info' | 'success' | 'error' = 'info'): void {
+        toastEl.textContent = message;
+        toastEl.className = `toast toast-${variant}`;
+        toastEl.hidden = false;
+        if (toastTimer !== null) {
+          window.clearTimeout(toastTimer);
+        }
+        toastTimer = window.setTimeout(() => {
+          toastEl.hidden = true;
+        }, 3200);
+      }
+
+      function openConfirm(
+        title: string,
+        message: string,
+        confirmLabel: string,
+        onConfirm: () => void
+      ): void {
+        confirmTitle.textContent = title;
+        confirmMessage.textContent = message;
+        btnConfirmOk.textContent = confirmLabel;
+        pendingConfirmAction = onConfirm;
+        confirmModal.hidden = false;
+      }
+
+      function closeConfirm(): void {
+        confirmModal.hidden = true;
+        pendingConfirmAction = null;
+      }
+
+      function findNearestDateWithPasses(targetISO: string): string | null {
+        const dates = getAvailableDates();
+        if (dates.length === 0) return null;
+        const upcoming = dates.find((d) => d >= targetISO);
+        return upcoming ?? dates[dates.length - 1];
+      }
+
+      async function renderQrSvg(text: string): Promise<string> {
+        return QRCode.toString(text, {
+          type: 'svg',
+          margin: 2,
+          errorCorrectionLevel: 'M',
+          color: {
+            dark: '#000000',
+            light: '#ffffff',
+          },
+        });
+      }
+
+      // --- Render Stats & Manage Controls ---
+      function refreshStats(): void {
+        const stats = getStorageStats();
+        statTotalEl.textContent = String(stats.count);
+        statDatesEl.textContent = String(stats.datesCount);
+        statExpiredEl.textContent = String(stats.expiredCount);
+        statBytesEl.textContent = formatBytes(stats.bytes);
+
+        const dayCoupons = getCouponsForDate(selectedDateISO);
+        const dayLabel = formatReadableDate(selectedDateISO);
+        btnDeleteSelectedDate.textContent = `Delete ${dayLabel} (${dayCoupons.length})`;
+        btnDeleteSelectedDate.disabled = dayCoupons.length === 0;
+
+        btnDeleteExpired.textContent = `Delete Expired (${stats.expiredCount})`;
+        btnDeleteExpired.disabled = stats.expiredCount === 0;
+
+        btnWipeAll.disabled = stats.count === 0;
+        btnShowTransferQr.disabled = stats.count === 0;
+        btnExportTxt.disabled = stats.count === 0;
+      }
+
+      // --- Render Saved Date Chips ---
+      function renderDateChips(): void {
+        const dates = getAvailableDates();
+        if (dates.length === 0) {
+          dateChipsBar.hidden = true;
+          dateChipsBar.innerHTML = '';
+          return;
+        }
+
+        const maxChips = 15;
+        let start = 0;
+        if (dates.length > maxChips) {
+          let anchorIdx = dates.findIndex((d) => d >= selectedDateISO);
+          if (anchorIdx === -1) anchorIdx = dates.length - 1;
+          start = Math.max(
+            0,
+            Math.min(anchorIdx - Math.floor(maxChips / 2), dates.length - maxChips)
+          );
+        }
+        const visibleDates = dates.slice(start, start + maxChips);
+
+        dateChipsBar.hidden = false;
+        dateChipsBar.innerHTML = '';
+
+        for (const iso of visibleDates) {
+          const epoch = isoToEpochDays(iso);
+          if (epoch === null) continue;
+          const display = epochDaysToDisplayDate(epoch).replace(/,\s*\d{4}$/, '');
+          const chip = document.createElement('button');
+          chip.type = 'button';
+          chip.className = `date-chip${iso === selectedDateISO ? ' is-active' : ''}`;
+          chip.textContent = display;
+          chip.title = formatReadableDate(iso);
+          chip.addEventListener('click', () => {
+            selectedDateISO = iso;
+            activePassIndex = 0;
+            void renderPassesForSelectedDate();
+          });
+          dateChipsBar.appendChild(chip);
+        }
+      }
+
+      function updateCarouselDotsVisibility(): void {
+        const needsScroll = passCarousel.scrollWidth > passCarousel.clientWidth + 4;
+        carouselDots.hidden = !needsScroll || currentDayCoupons.length <= 1;
+      }
+
+      // --- Render Passes ---
+      let renderSequence = 0;
+
+      async function renderPassesForSelectedDate(
+        options: { autoSelectRelevant?: boolean } = {}
+      ): Promise<void> {
+        const { autoSelectRelevant = true } = options;
+        const seq = ++renderSequence;
+        datePicker.value = selectedDateISO;
+
+        const todayISO = getTodayLocalISO();
+        const isToday = selectedDateISO === todayISO;
+        btnToday.classList.toggle('is-today', isToday);
+
+        dayReadableEl.textContent = formatReadableDate(selectedDateISO);
+        currentDayCoupons = getCouponsForDate(selectedDateISO);
+
+        const relevant = isToday
+          ? getRelevantMealForTime()
+          : { meal: null, status: 'none' as const, windowLabel: '' };
+        const relevantIndex =
+          relevant.meal !== null
+            ? currentDayCoupons.findIndex((c) => c.meal === relevant.meal)
+            : -1;
+
+        if (isToday && relevant.meal !== null && relevantIndex !== -1) {
+          const statusPrefix = relevant.status === 'active' ? 'Now' : 'Up next';
+          dayPassCountEl.textContent = `${statusPrefix}: ${MEAL_LABELS[relevant.meal]} (${relevant.windowLabel})`;
+        } else {
+          dayPassCountEl.textContent = '';
+        }
+
+        refreshStats();
+        renderDateChips();
+
+        if (currentDayCoupons.length === 0) {
+          passesStage.hidden = true;
+          passesEmpty.hidden = false;
+          passCarousel.innerHTML = '';
+          carouselDots.innerHTML = '';
+          emptyTitle.textContent = `No passes for ${formatReadableDate(selectedDateISO)}`;
+
+          const nearest = findNearestDateWithPasses(selectedDateISO);
+          if (nearest) {
+            emptyJumpWrap.hidden = false;
+            btnJumpDate.dataset.targetDate = nearest;
+            btnJumpDate.textContent = `Jump to ${formatReadableDate(nearest)}`;
+          } else {
+            emptyJumpWrap.hidden = true;
+          }
+          return;
+        }
+
+        passesEmpty.hidden = true;
+        passesStage.hidden = false;
+
+        const svgs = await Promise.all(
+          currentDayCoupons.map((c) => renderQrSvg(c.rawPayload))
+        );
+        if (seq !== renderSequence) return;
+
+        passCarousel.innerHTML = '';
+        carouselDots.innerHTML = '';
+
+        const hasRelevantMatch = relevantIndex !== -1;
+
+        currentDayCoupons.forEach((coupon, index) => {
+          const slide = document.createElement('article');
+          slide.className = 'pass-slide';
+          slide.dataset.index = String(index);
+
+          const isRelevantCard = index === relevantIndex;
+          const cardStateClass = hasRelevantMatch
+            ? isRelevantCard
+              ? `is-relevant is-${relevant.status}`
+              : 'is-dimmed'
+            : '';
+
+          const statusPillHtml = isRelevantCard
+            ? `<span class="relevance-pill relevance-${relevant.status}">${
+                relevant.status === 'active' ? 'Now' : 'Next'
+              }</span>`
+            : '';
+
+          const timingText = MEAL_TIMING_LABELS[coupon.meal] ?? '';
+          const timingRowHtml = timingText
+            ? `
+                <div class="pass-meta-row">
+                  <span class="pass-meta-label">Time</span>
+                  <span class="pass-meta-value pass-meta-timing">${escapeHtml(timingText)}</span>
+                </div>
+              `
+            : '';
+
+          const mealClass = `meal-badge meal-${coupon.meal.toLowerCase()}`;
+          slide.innerHTML = `
+            <div class="pass-card ${cardStateClass}" data-index="${index}">
+              <div class="pass-card-top">
+                <div class="pass-card-badges">
+                  <span class="${mealClass}">${MEAL_LABELS[coupon.meal]}</span>
+                  ${statusPillHtml}
+                </div>
+                <button
+                  type="button"
+                  class="delete-coupon-btn"
+                  data-epoch="${coupon.epochDays}"
+                  data-id="${escapeHtml(coupon.id)}"
+                  aria-label="Delete ${MEAL_LABELS[coupon.meal]} pass ${escapeHtml(coupon.id)}"
+                  title="Delete pass"
+                >
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                    <path d="M10 11v6"></path>
+                    <path d="M14 11v6"></path>
+                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
+                  </svg>
+                </button>
+              </div>
+
+              <div class="qr-frame" aria-label="QR code for ${escapeHtml(coupon.rawPayload)}">
+                <div class="qr-svg-host">${svgs[index]}</div>
+              </div>
+
+              <div class="pass-card-footer">
+                ${timingRowHtml}
+                <div class="pass-meta-row">
+                  <span class="pass-meta-label">Date</span>
+                  <span class="pass-meta-value">${escapeHtml(coupon.displayDate)}</span>
+                </div>
+                <div class="pass-meta-row">
+                  <span class="pass-meta-label">ID</span>
+                  <code class="pass-meta-code">${escapeHtml(coupon.id)}</code>
+                </div>
+              </div>
+            </div>
+          `;
+
+          passCarousel.appendChild(slide);
+
+          const dot = document.createElement('button');
+          dot.type = 'button';
+          dot.className = `carousel-dot${isRelevantCard ? ' is-relevant-dot' : ''}`;
+          dot.setAttribute('role', 'tab');
+          dot.setAttribute(
+            'aria-label',
+            `${MEAL_LABELS[coupon.meal]} pass (${index + 1} of ${currentDayCoupons.length})`
+          );
+          dot.dataset.index = String(index);
+          dot.addEventListener('click', () => scrollToPass(index));
+          carouselDots.appendChild(dot);
+        });
+
+        if (autoSelectRelevant && hasRelevantMatch) {
+          activePassIndex = relevantIndex;
+        } else {
+          activePassIndex = Math.min(activePassIndex, currentDayCoupons.length - 1);
+        }
+
+        updateActiveDot(activePassIndex);
+        requestAnimationFrame(() => {
+          const slides = passCarousel.querySelectorAll<HTMLElement>('.pass-slide');
+          const targetSlide = slides[activePassIndex];
+          if (targetSlide && passCarousel.scrollWidth > passCarousel.clientWidth + 4) {
+            passCarousel.scrollTo({
+              left: targetSlide.offsetLeft,
+              behavior: 'auto',
+            });
+          }
+          updateCarouselDotsVisibility();
+        });
+      }
+
+      function updateActiveDot(index: number): void {
+        activePassIndex = index;
+        const dots = carouselDots.querySelectorAll<HTMLButtonElement>('.carousel-dot');
+        dots.forEach((dot, i) => {
+          const active = i === index;
+          dot.classList.toggle('is-active', active);
+          dot.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+      }
+
+      function scrollToPass(index: number): void {
+        const slides = passCarousel.querySelectorAll<HTMLElement>('.pass-slide');
+        const target = slides[index];
+        if (!target) return;
+        target.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        updateActiveDot(index);
+      }
+
+      let scrollSyncRaf: number | null = null;
+      passCarousel.addEventListener('scroll', () => {
+        if (scrollSyncRaf !== null) return;
+        scrollSyncRaf = requestAnimationFrame(() => {
+          scrollSyncRaf = null;
+          const slides = passCarousel.querySelectorAll<HTMLElement>('.pass-slide');
+          const step =
+            slides.length > 1
+              ? slides[1].offsetLeft - slides[0].offsetLeft
+              : passCarousel.clientWidth;
+          if (step <= 0) return;
+          const idx = Math.round(passCarousel.scrollLeft / step);
+          const clamped = Math.max(
+            0,
+            Math.min(idx, Math.max(0, currentDayCoupons.length - 1))
+          );
+          if (clamped !== activePassIndex) {
+            updateActiveDot(clamped);
+          }
+        });
+      });
+
+      passCarousel.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        const btn = target.closest<HTMLButtonElement>('.delete-coupon-btn');
+        if (!btn) return;
+        const epoch = Number(btn.dataset.epoch);
+        const id = btn.dataset.id ?? '';
+        if (!Number.isSafeInteger(epoch) || !id) return;
+
+        openConfirm(
+          'Delete Coupon?',
+          `Remove coupon ${id} for ${epochDaysToDisplayDate(epoch)}?`,
+          'Delete',
+          () => {
+            if (deleteCoupon(epoch, id)) {
+              showToast('Coupon deleted', 'info');
+              void renderPassesForSelectedDate();
+            }
+          }
+        );
+      });
+
+      // Date controls
+      btnPrevDay.addEventListener('click', () => {
+        selectedDateISO = shiftISODate(selectedDateISO, -1);
+        activePassIndex = 0;
+        void renderPassesForSelectedDate();
+      });
+
+      btnNextDay.addEventListener('click', () => {
+        selectedDateISO = shiftISODate(selectedDateISO, 1);
+        activePassIndex = 0;
+        void renderPassesForSelectedDate();
+      });
+
+      btnToday.addEventListener('click', () => {
+        selectedDateISO = getTodayLocalISO();
+        activePassIndex = 0;
+        void renderPassesForSelectedDate({ autoSelectRelevant: true });
+      });
+
+      calendarTrigger.addEventListener('click', () => {
+        try {
+          if (typeof datePicker.showPicker === 'function') {
+            datePicker.showPicker();
+          }
+        } catch {
+          // Native input click handles browsers without showPicker
+        }
+      });
+
+      datePicker.addEventListener('change', () => {
+        if (datePicker.value) {
+          selectedDateISO = datePicker.value;
+          activePassIndex = 0;
+          void renderPassesForSelectedDate();
+        }
+      });
+
+      btnJumpDate.addEventListener('click', () => {
+        const target = btnJumpDate.dataset.targetDate;
+        if (target) {
+          selectedDateISO = target;
+          activePassIndex = 0;
+          void renderPassesForSelectedDate();
+        }
+      });
+
+      btnEmptyImport.addEventListener('click', () => switchTab('manage'));
+      btnEmptyScan.addEventListener('click', () => switchTab('scan'));
+
+      // --- Tab Navigation ---
+      function switchTab(tab: TabName): void {
+        activeTab = tab;
+
+        viewPasses.hidden = tab !== 'passes';
+        viewScan.hidden = tab !== 'scan';
+        viewManage.hidden = tab !== 'manage';
+
+        viewPasses.classList.toggle('is-active', tab === 'passes');
+        viewScan.classList.toggle('is-active', tab === 'scan');
+        viewManage.classList.toggle('is-active', tab === 'manage');
+
+        navButtons.forEach((btn) => {
+          const isCurrent = btn.dataset.tab === tab;
+          btn.classList.toggle('is-active', isCurrent);
+          if (isCurrent) {
+            btn.setAttribute('aria-current', 'page');
+          } else {
+            btn.removeAttribute('aria-current');
+          }
+        });
+
+        if (tab === 'scan') {
+          void startCamera();
+        } else {
+          stopCamera();
+        }
+
+        if (tab === 'passes') {
+          void renderPassesForSelectedDate();
+        } else if (tab === 'manage') {
+          refreshStats();
+        }
+      }
+
+      navButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const tab = btn.dataset.tab as TabName | undefined;
+          if (tab) switchTab(tab);
+        });
+      });
+
+      // --- Camera QR Scanner ---
+      function setScanFeedback(
+        message: string,
+        type: 'success' | 'info' | 'error'
+      ): void {
+        scanFeedback.textContent = message;
+        scanFeedback.className = `feedback-banner feedback-${type}`;
+        scanFeedback.hidden = false;
+      }
+
+      function renderRxProgress(): void {
+        if (!rxSession) {
+          transferRxCard.hidden = true;
+          return;
+        }
+        transferRxCard.hidden = false;
+        transferRxCount.textContent = `${rxSession.parts.size} / ${rxSession.total} chunks scanned`;
+        transferRxPills.innerHTML = '';
+
+        for (let i = 1; i <= rxSession.total; i++) {
+          const pill = document.createElement('span');
+          pill.className = `chunk-pill ${rxSession.parts.has(i) ? 'is-done' : ''}`;
+          pill.textContent = String(i);
+          transferRxPills.appendChild(pill);
+        }
+      }
+
+      btnResetRx.addEventListener('click', () => {
+        rxSession = null;
+        renderRxProgress();
+        setScanFeedback('Transfer buffer cleared', 'info');
+      });
+
+      scanMealButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const meal = btn.dataset.meal as ScanMealOption | undefined;
+          if (!meal) return;
+          scanMealOption = meal;
+          scanMealButtons.forEach((b) => {
+            const selected = b === btn;
+            b.classList.toggle('is-selected', selected);
+            b.setAttribute('aria-checked', selected ? 'true' : 'false');
+          });
+        });
+      });
+
+      function handleScannedPayload(raw: string): void {
+        const now = Date.now();
+        if (raw === lastScannedRaw && now - lastScannedTime < 2200) {
+          return;
+        }
+        lastScannedRaw = raw;
+        lastScannedTime = now;
+
+        const chunk = parseTransferChunk(raw);
+        if (chunk) {
+          if (!rxSession || rxSession.total !== chunk.total) {
+            rxSession = { total: chunk.total, parts: new Map() };
+          }
+          const alreadyHad = rxSession.parts.has(chunk.part);
+          rxSession.parts.set(chunk.part, chunk.data);
+          renderRxProgress();
+
+          if (rxSession.parts.size === rxSession.total) {
+            let joined = '';
+            for (let i = 1; i <= rxSession.total; i++) {
+              joined += rxSession.parts.get(i) ?? '';
+            }
+            const decodedCoupons = decompressTransferData(joined);
+            if (!decodedCoupons) {
+              setScanFeedback(
+                'Transfer chunks could not be decompressed. Please reset and scan again.',
+                'error'
+              );
+              return;
+            }
+            const stats = mergeCoupons(decodedCoupons);
+            rxSession = null;
+            renderRxProgress();
+            refreshStats();
+            const msg = `Transfer complete: ${stats.added} added, ${stats.updated} updated, ${stats.duplicates} already saved.`;
+            setScanFeedback(msg, 'success');
+            showToast(`Imported ${stats.added + stats.updated} passes`, 'success');
+          } else {
+            setScanFeedback(
+              alreadyHad
+                ? `Chunk ${chunk.part}/${chunk.total} already scanned — show next QR.`
+                : `Scanned chunk ${chunk.part}/${chunk.total} (${rxSession.parts.size}/${chunk.total} collected).`,
+              'info'
+            );
+          }
+          return;
+        }
+
+        const parsed = parseCouponPayload(raw);
+        if (!parsed) {
+          setScanFeedback(
+            'Unrecognized QR code. Expected mess coupon ("id`Mon DD, YYYY") or MC1 transfer QR.',
+            'error'
+          );
+          return;
+        }
+
+        const meal: MealType = scanMealOption === 'AUTO' ? 'U' : scanMealOption;
+        const stats = mergeCoupons(
+          [{ epochDays: parsed.epochDays, meal, id: parsed.id }],
+          { overwriteKnownMeal: scanMealOption !== 'AUTO' }
+        );
+        refreshStats();
+
+        if (stats.added > 0) {
+          setScanFeedback(
+            `Saved ${MEAL_LABELS[meal]} pass · ${parsed.displayDate} (${parsed.id})`,
+            'success'
+          );
+          showToast(`Added pass for ${parsed.displayDate}`, 'success');
+        } else if (stats.updated > 0) {
+          setScanFeedback(
+            `Updated meal to ${MEAL_LABELS[meal]} · ${parsed.displayDate} (${parsed.id})`,
+            'success'
+          );
+          showToast('Updated pass meal tag', 'success');
+        } else {
+          setScanFeedback(
+            `Pass already saved · ${parsed.displayDate} (${parsed.id})`,
+            'info'
+          );
+        }
+      }
+
+      function scanFrameLoop(): void {
+        if (!cameraStream) return;
+
+        if (
+          scannerVideo.readyState === scannerVideo.HAVE_ENOUGH_DATA &&
+          scannerVideo.videoWidth > 0 &&
+          scannerVideo.videoHeight > 0
+        ) {
+          const ctx = scannerCanvas.getContext('2d', {
+            willReadFrequently: true,
+          });
+          if (ctx) {
+            const w = scannerVideo.videoWidth;
+            const h = scannerVideo.videoHeight;
+            if (scannerCanvas.width !== w || scannerCanvas.height !== h) {
+              scannerCanvas.width = w;
+              scannerCanvas.height = h;
+            }
+            ctx.drawImage(scannerVideo, 0, 0, w, h);
+            const imageData = ctx.getImageData(0, 0, w, h);
+            const qr = jsQR(imageData.data, w, h, {
+              inversionAttempts: 'attemptBoth',
+            });
+            if (qr && qr.data) {
+              handleScannedPayload(qr.data);
+            }
+          }
+        }
+
+        scanRafId = requestAnimationFrame(scanFrameLoop);
+      }
+
+      async function startCamera(): Promise<void> {
+        if (cameraStream) return;
+
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          cameraPlaceholder.hidden = false;
+          cameraStatusText.textContent =
+            'Camera API unavailable. Ensure HTTPS or localhost context.';
+          btnToggleCamera.textContent = 'Start Camera';
+          return;
+        }
+
+        cameraPlaceholder.hidden = false;
+        cameraStatusText.textContent = 'Starting camera...';
+        btnToggleCamera.disabled = true;
+
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+              facingMode: { ideal: 'environment' },
+              width: { ideal: 1280 },
+              height: { ideal: 720 },
+            },
+            audio: false,
+          });
+
+          if (activeTab !== 'scan') {
+            stream.getTracks().forEach((t) => t.stop());
+            return;
+          }
+
+          cameraStream = stream;
+          scannerVideo.srcObject = stream;
+          await scannerVideo.play();
+          cameraPlaceholder.hidden = true;
+          btnToggleCamera.textContent = 'Stop Camera';
+          scanRafId = requestAnimationFrame(scanFrameLoop);
+        } catch (err) {
+          const msg =
+            err instanceof Error ? err.message : 'Camera permission denied';
+          cameraPlaceholder.hidden = false;
+          cameraStatusText.textContent = `Unable to access camera: ${msg}`;
+          btnToggleCamera.textContent = 'Start Camera';
+        } finally {
+          btnToggleCamera.disabled = false;
+        }
+      }
+
+      function stopCamera(): void {
+        if (scanRafId !== null) {
+          cancelAnimationFrame(scanRafId);
+          scanRafId = null;
+        }
+        if (cameraStream) {
+          cameraStream.getTracks().forEach((track) => track.stop());
+          cameraStream = null;
+        }
+        scannerVideo.srcObject = null;
+        cameraPlaceholder.hidden = false;
+        cameraStatusText.textContent = 'Camera paused. Tap "Start Camera" to scan.';
+        btnToggleCamera.textContent = 'Start Camera';
+      }
+
+      btnToggleCamera.addEventListener('click', () => {
+        if (cameraStream) {
+          stopCamera();
+        } else {
+          void startCamera();
+        }
+      });
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden && cameraStream) {
+          stopCamera();
+        }
+      });
+
+      // --- PDF Import (file picker + drag-and-drop) ---
+      async function importPdfFiles(fileList: File[]): Promise<void> {
+        if (fileList.length === 0) return;
+
+        pdfFileInput.value = '';
+        pdfFileInput.disabled = true;
+
+        pdfProgressWrap.hidden = false;
+        pdfResultEl.hidden = true;
+        pdfProgressBar.style.width = '0%';
+        pdfProgressPct.textContent = '0%';
+        pdfProgressLabel.textContent = `Preparing ${fileList.length} PDF file(s)...`;
+
+        let totalPagesAll = 0;
+        let totalAdded = 0;
+        let totalUpdated = 0;
+        let totalDuplicates = 0;
+        let firstImportedDateISO: string | null = null;
+        const allFailures: Array<{ file: string; failure: PdfPageFailure }> = [];
+
+        try {
+          for (let fIdx = 0; fIdx < fileList.length; fIdx++) {
+            const file = fileList[fIdx];
+            pdfProgressLabel.textContent = `Loading ${file.name}...`;
+
+            const result = await parseCouponsFromPDF(file, (prog) => {
+              const pct =
+                prog.totalPages > 0
+                  ? Math.round((prog.currentPage / prog.totalPages) * 100)
+                  : 100;
+              pdfProgressBar.style.width = `${pct}%`;
+              pdfProgressPct.textContent = `${pct}%`;
+              const prefix =
+                fileList.length > 1
+                  ? `[${fIdx + 1}/${fileList.length}] `
+                  : '';
+              pdfProgressLabel.textContent = `${prefix}Page ${prog.currentPage} / ${prog.totalPages} (${prog.decodedCount} decoded, ${prog.failedCount} failed)`;
+            });
+
+            totalPagesAll += result.totalPages;
+            if (result.coupons.length > 0) {
+              if (!firstImportedDateISO) {
+                firstImportedDateISO = result.coupons[0].dateISO;
+              }
+              const merged = mergeCoupons(result.coupons);
+              totalAdded += merged.added;
+              totalUpdated += merged.updated;
+              totalDuplicates += merged.duplicates;
+            }
+
+            for (const failure of result.failures) {
+              allFailures.push({ file: file.name, failure });
+            }
+          }
+
+          refreshStats();
+
+          const failureHtml =
+            allFailures.length > 0
+              ? `
+                <details class="failure-details">
+                  <summary>${allFailures.length} page(s) failed to decode or parse</summary>
+                  <ul class="failure-list">
+                    ${allFailures
+                      .map(
+                        ({ file, failure }) =>
+                          `<li><strong>${
+                            fileList.length > 1 ? `${escapeHtml(file)} · ` : ''
+                          }Page ${failure.page}:</strong> ${escapeHtml(
+                            failure.reason
+                          )}${
+                            failure.rawQr
+                              ? ` <code>${escapeHtml(failure.rawQr.slice(0, 60))}</code>`
+                              : ''
+                          }</li>`
+                      )
+                      .join('')}
+                  </ul>
+                </details>
+              `
+              : '';
+
+          const jumpHtml = firstImportedDateISO
+            ? `<button type="button" class="btn btn-sm btn-primary" id="btn-view-imported" data-date="${firstImportedDateISO}">View Imported Passes</button>`
+            : '';
+
+          pdfResultEl.innerHTML = `
+            <div class="result-summary">
+              <div class="result-stats">
+                <span><strong>${totalPagesAll}</strong> pages</span>
+                <span class="text-success"><strong>+${totalAdded}</strong> added</span>
+                <span><strong>${totalUpdated}</strong> updated</span>
+                <span><strong>${totalDuplicates}</strong> duplicates</span>
+                ${
+                  allFailures.length > 0
+                    ? `<span class="text-danger"><strong>${allFailures.length}</strong> failed</span>`
+                    : ''
+                }
+              </div>
+              ${jumpHtml}
+            </div>
+            ${failureHtml}
+          `;
+          pdfResultEl.hidden = false;
+
+          const jumpBtn = document.getElementById('btn-view-imported');
+          jumpBtn?.addEventListener('click', () => {
+            const targetDate = jumpBtn.getAttribute('data-date');
+            if (targetDate) {
+              selectedDateISO = targetDate;
+              activePassIndex = 0;
+              switchTab('passes');
+            }
+          });
+
+          showToast(
+            `PDF imported: ${totalAdded} added, ${totalUpdated} updated`,
+            allFailures.length > 0 && totalAdded === 0 ? 'error' : 'success'
+          );
+        } catch (err) {
+          const message =
+            err instanceof Error ? err.message : 'Failed to parse PDF';
+          pdfResultEl.innerHTML = `<div class="text-danger">Error: ${escapeHtml(message)}</div>`;
+          pdfResultEl.hidden = false;
+          showToast('PDF import failed', 'error');
+        } finally {
+          pdfFileInput.disabled = false;
+        }
+      }
+
+      pdfFileInput.addEventListener('change', () => {
+        const files = pdfFileInput.files;
+        if (!files || files.length === 0) return;
+        void importPdfFiles(Array.from(files));
+      });
+
+      pdfDropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        pdfDropzone.classList.add('is-dragover');
+      });
+
+      pdfDropzone.addEventListener('dragleave', () => {
+        pdfDropzone.classList.remove('is-dragover');
+      });
+
+      pdfDropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        pdfDropzone.classList.remove('is-dragover');
+        if (pdfFileInput.disabled) return;
+        const dropped = Array.from(e.dataTransfer?.files ?? []).filter(
+          (f) => f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf')
+        );
+        if (dropped.length === 0) {
+          showToast('Please drop a .pdf file', 'error');
+          return;
+        }
+        void importPdfFiles(dropped);
+      });
+
+      // --- Device Transfer QR Modal ---
+      async function renderCurrentTransferChunk(): Promise<void> {
+        const chunk = transferChunks[transferChunkIndex];
+        if (!chunk) return;
+
+        transferChunkLabel.textContent = `${transferChunkIndex + 1} / ${transferChunks.length}`;
+        btnTransferPrev.disabled = transferChunkIndex === 0;
+        btnTransferNext.disabled = transferChunkIndex >= transferChunks.length - 1;
+
+        transferQrSvgHost.innerHTML = await renderQrSvg(chunk);
+      }
+
+      btnShowTransferQr.addEventListener('click', async () => {
+        const chunks = createTransferChunks(280);
+        if (chunks.length === 0) {
+          showToast('No coupons to transfer', 'info');
+          return;
+        }
+
+        const stats = getStorageStats();
+        transferChunks = chunks;
+        transferChunkIndex = 0;
+        transferModalMeta.textContent = `${stats.count} passes · ${chunks.length} QR ${chunks.length === 1 ? 'chunk' : 'chunks'}`;
+        transferModal.hidden = false;
+        await renderCurrentTransferChunk();
+      });
+
+      btnTransferPrev.addEventListener('click', () => {
+        if (transferChunkIndex > 0) {
+          transferChunkIndex--;
+          void renderCurrentTransferChunk();
+        }
+      });
+
+      btnTransferNext.addEventListener('click', () => {
+        if (transferChunkIndex < transferChunks.length - 1) {
+          transferChunkIndex++;
+          void renderCurrentTransferChunk();
+        }
+      });
+
+      btnCloseTransfer.addEventListener('click', () => {
+        transferModal.hidden = true;
+      });
+
+      transferModal.addEventListener('click', (e) => {
+        if (e.target === transferModal) {
+          transferModal.hidden = true;
+        }
+      });
+
+      // --- Backup & Restore (.txt) ---
+      btnExportTxt.addEventListener('click', () => {
+        const content = createBackupFileContent();
+        if (!content) {
+          showToast('No coupons to back up', 'info');
+          return;
+        }
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `mess-pass-backup-${getTodayLocalISO()}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        showToast('Backup file downloaded', 'success');
+      });
+
+      txtRestoreInput.addEventListener('change', async () => {
+        const file = txtRestoreInput.files?.[0];
+        if (!file) return;
+        txtRestoreInput.value = '';
+
+        try {
+          const text = await file.text();
+          const coupons = parseBackupFileContent(text);
+          if (!coupons || coupons.length === 0) {
+            showToast('Backup file was empty or invalid', 'error');
+            return;
+          }
+          const stats = mergeCoupons(coupons);
+          refreshStats();
+          showToast(
+            `Restored: ${stats.added} added, ${stats.updated} updated, ${stats.duplicates} duplicates`,
+            'success'
+          );
+        } catch {
+          showToast('Failed to read backup file', 'error');
+        }
+      });
+
+      // --- Bulk Deletion ---
+      btnDeleteSelectedDate.addEventListener('click', () => {
+        const count = getCouponsForDate(selectedDateISO).length;
+        if (count === 0) return;
+        const label = formatReadableDate(selectedDateISO);
+        openConfirm(
+          'Delete Date Passes?',
+          `Delete all ${count} pass(es) for ${label}?`,
+          'Delete',
+          () => {
+            const removed = deleteCouponsForDate(selectedDateISO);
+            showToast(`Deleted ${removed} pass(es)`, 'info');
+            refreshStats();
+          }
+        );
+      });
+
+      btnDeleteExpired.addEventListener('click', () => {
+        const stats = getStorageStats();
+        if (stats.expiredCount === 0) return;
+        openConfirm(
+          'Delete Expired Passes?',
+          `Remove ${stats.expiredCount} pass(es) dated before today (${getTodayLocalISO()})?`,
+          'Delete',
+          () => {
+            const removed = deleteExpiredCoupons();
+            showToast(`Removed ${removed} expired pass(es)`, 'info');
+            refreshStats();
+          }
+        );
+      });
+
+      btnWipeAll.addEventListener('click', () => {
+        const stats = getStorageStats();
+        if (stats.count === 0) return;
+        openConfirm(
+          'Wipe All Coupons?',
+          `Permanently delete all ${stats.count} pass(es) stored on this device?`,
+          'Wipe All',
+          () => {
+            const removed = wipeAllCoupons();
+            showToast(`Wiped ${removed} pass(es)`, 'info');
+            refreshStats();
+          }
+        );
+      });
+
+      // Confirm modal wiring
+      btnConfirmCancel.addEventListener('click', closeConfirm);
+      confirmModal.addEventListener('click', (e) => {
+        if (e.target === confirmModal) closeConfirm();
+      });
+      btnConfirmOk.addEventListener('click', () => {
+        const action = pendingConfirmAction;
+        closeConfirm();
+        action?.();
+      });
+
+      // --- Service Worker Registration ---
+      async function registerOfflineServiceWorker(): Promise<void> {
+        if (!('serviceWorker' in navigator)) return;
+        try {
+          const registration = await navigator.serviceWorker.register('./sw.js', {
+            scope: './',
+          });
+
+          const collectAssetUrls = (): string[] => {
+            const urls = new Set<string>();
+            urls.add(PDF_WORKER_URL);
+            document
+              .querySelectorAll<HTMLScriptElement>('script[src]')
+              .forEach((s) => urls.add(s.src));
+            document
+              .querySelectorAll<HTMLLinkElement>(
+                'link[rel="stylesheet"], link[rel="modulepreload"], link[rel="icon"], link[rel="manifest"]'
+              )
+              .forEach((l) => {
+                if (l.href) urls.add(l.href);
+              });
+            return Array.from(urls);
+          };
+
+          const sendCacheMessage = (sw: ServiceWorker | null): void => {
+            sw?.postMessage({
+              type: 'CACHE_URLS',
+              urls: collectAssetUrls(),
+            });
+          };
+
+          if (registration.active) {
+            sendCacheMessage(registration.active);
+          }
+
+          navigator.serviceWorker.ready.then((readyReg) => {
+            sendCacheMessage(readyReg.active);
+          });
+        } catch {
+          // Service worker unavailable in restricted contexts
+        }
+      }
+
+      // --- Desktop Keyboard Shortcuts & Resize Sync ---
+      window.addEventListener('resize', updateCarouselDotsVisibility);
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (!confirmModal.hidden) {
+            closeConfirm();
+            return;
+          }
+          if (!transferModal.hidden) {
+            transferModal.hidden = true;
+            return;
+          }
+        }
+
+        if (!transferModal.hidden) {
+          if (e.key === 'ArrowLeft' && transferChunkIndex > 0) {
+            e.preventDefault();
+            transferChunkIndex--;
+            void renderCurrentTransferChunk();
+          } else if (
+            e.key === 'ArrowRight' &&
+            transferChunkIndex < transferChunks.length - 1
+          ) {
+            e.preventDefault();
+            transferChunkIndex++;
+            void renderCurrentTransferChunk();
+          }
+          return;
+        }
+
+        const activeEl = document.activeElement;
+        const isTyping =
+          activeEl instanceof HTMLInputElement ||
+          activeEl instanceof HTMLTextAreaElement ||
+          activeEl instanceof HTMLSelectElement;
+
+        if (!isTyping && confirmModal.hidden && activeTab === 'passes') {
+          if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            selectedDateISO = shiftISODate(selectedDateISO, -1);
+            activePassIndex = 0;
+            void renderPassesForSelectedDate();
+          } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            selectedDateISO = shiftISODate(selectedDateISO, 1);
+            activePassIndex = 0;
+            void renderPassesForSelectedDate();
+          }
+        }
+      });
+
+      // Auto-refresh time-of-day meal highlight every minute when viewing Today
+      window.setInterval(() => {
+        if (activeTab === 'passes' && selectedDateISO === getTodayLocalISO()) {
+          void renderPassesForSelectedDate({ autoSelectRelevant: false });
+        }
+      }, 60_000);
+
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && activeTab === 'passes' && selectedDateISO === getTodayLocalISO()) {
+          void renderPassesForSelectedDate({ autoSelectRelevant: true });
+        }
+      });
+
+      // --- Init ---
+      void renderPassesForSelectedDate({ autoSelectRelevant: true });
+      void registerOfflineServiceWorker();
+    </script>
+
+    <style is:global>
+      :root {
+        --bg: #000000;
+        --surface: #0a0d14;
+        --surface-alt: #111827;
+        --border: #1e293b;
+        --text: #f1f5f9;
+        --text-muted: #94a3b8;
+        --primary: #3b82f6;
+        --primary-hover: #2563eb;
+        --primary-fg: #ffffff;
+        --accent: #3b82f6;
+        --accent-soft: rgba(59, 130, 246, 0.16);
+        --accent-fg: #93c5fd;
+        --danger: #ef4444;
+        --danger-soft: rgba(239, 68, 68, 0.14);
+        --danger-fg: #fca5a5;
+        --shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+        --radius: 14px;
+        --nav-height: 58px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+        overflow-x: clip;
+        background: var(--bg);
+        color: var(--text);
+        color-scheme: dark;
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+          Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      button,
+      input {
+        font: inherit;
+        color: inherit;
+      }
+
+      code {
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 0.88em;
+      }
+
+      .app-shell {
+        width: 100%;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + 12px);
+      }
+
+      /* Compact Top Header */
+      .app-header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: rgba(0, 0, 0, 0.88);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .header-inner {
+        max-width: 520px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: calc(8px + env(safe-area-inset-top)) 14px 8px;
+      }
+
+      .desktop-nav {
+        display: none;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .brand-icon {
+        width: 26px;
+        height: 26px;
+        border-radius: 7px;
+        background: var(--primary);
+        color: var(--primary-fg);
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+      }
+
+      .brand-title {
+        margin: 0;
+        font-size: 0.94rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+      }
+
+      .github-link {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        color: var(--text-muted);
+        display: grid;
+        place-items: center;
+        text-decoration: none;
+        transition: color 0.15s ease, background 0.15s ease;
+      }
+
+      .github-link:hover {
+        color: var(--text);
+        background: var(--surface-alt);
+      }
+
+      /* Main */
+      .main-content {
+        flex: 1;
+        width: 100%;
+        min-width: 0;
+        max-width: 520px;
+        margin: 0 auto;
+        padding: 12px 14px 8px;
+      }
+
+      .view {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-width: 0;
+      }
+
+      .view[hidden] {
+        display: none;
+      }
+
+      /* Minimal Passes Toolbar & Nondescript Date Controls */
+      .passes-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 2px 2px 0;
+      }
+
+      .day-summary-row {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+      }
+
+      .day-readable {
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+
+      .day-pass-count {
+        font-size: 0.76rem;
+        color: var(--accent-fg);
+        font-weight: 500;
+      }
+
+      .day-pass-count:empty {
+        display: none;
+      }
+
+      .date-bar {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex-shrink: 0;
+      }
+
+      .subtle-icon-btn {
+        width: 32px;
+        height: 32px;
+        border: 1px solid transparent;
+        background: transparent;
+        color: var(--text-muted);
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+      }
+
+      .subtle-icon-btn:hover {
+        color: var(--text);
+        background: var(--surface-alt);
+        border-color: var(--border);
+      }
+
+      .subtle-icon-btn:active {
+        transform: scale(0.95);
+      }
+
+      .date-icon-wrap {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .date-input-hidden {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+        border: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .today-btn {
+        height: 30px;
+        padding: 0 9px;
+        border-radius: 7px;
+        border: 1px solid transparent;
+        background: transparent;
+        color: var(--text-muted);
+        font-size: 0.76rem;
+        font-weight: 600;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+      }
+
+      .today-btn:hover {
+        color: var(--text);
+        background: var(--surface-alt);
+      }
+
+      .today-btn.is-today {
+        color: var(--accent-fg);
+      }
+
+      /* Quick Saved Dates Strip */
+      .date-chips-bar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        overflow-x: auto;
+        padding: 2px 0;
+        scrollbar-width: none;
+      }
+
+      .date-chips-bar::-webkit-scrollbar {
+        display: none;
+      }
+
+      .date-chips-bar[hidden] {
+        display: none;
+      }
+
+      .date-chip {
+        flex-shrink: 0;
+        height: 28px;
+        padding: 0 10px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text-muted);
+        font-size: 0.74rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      }
+
+      .date-chip:hover {
+        border-color: var(--primary);
+        color: var(--text);
+      }
+
+      .date-chip.is-active {
+        background: var(--accent-soft);
+        border-color: var(--primary);
+        color: var(--accent-fg);
+      }
+
+      /* Swipeable Pass Carousel (Mobile) */
+      .passes-stage {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        min-width: 0;
+        width: 100%;
+      }
+
+      .pass-carousel {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        width: 100%;
+        margin: 0;
+      }
+
+      .pass-carousel::-webkit-scrollbar {
+        display: none;
+      }
+
+      .pass-slide {
+        flex: 0 0 100%;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        scroll-snap-align: center;
+        scroll-snap-stop: always;
+        padding: 4px 0 8px;
+      }
+
+      .pass-card {
+        width: 100%;
+        max-width: 280px;
+        margin: 0 auto;
+        background: var(--surface);
+        border: 1.5px solid var(--border);
+        border-radius: 16px;
+        padding: 12px;
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        overflow: hidden;
+        transition: opacity 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .pass-card.is-relevant {
+        border-color: var(--primary);
+        box-shadow:
+          0 0 0 2px rgba(59, 130, 246, 0.28),
+          var(--shadow);
+      }
+
+      .pass-card.is-dimmed {
+        opacity: 0.48;
+      }
+
+      .pass-card.is-dimmed:hover,
+      .pass-card.is-dimmed:focus-within {
+        opacity: 0.96;
+      }
+
+      .pass-card-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+        min-width: 0;
+      }
+
+      .pass-card-badges {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 5px;
+        min-width: 0;
+      }
+
+      .meal-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 3px 9px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+      }
+
+      .meal-b {
+        background: rgba(245, 158, 11, 0.16);
+        color: #fcd34d;
+      }
+
+      .meal-l {
+        background: rgba(16, 185, 129, 0.16);
+        color: #6ee7b7;
+      }
+
+      .meal-s {
+        background: rgba(249, 115, 22, 0.18);
+        color: #fdba74;
+      }
+
+      .meal-d {
+        background: rgba(59, 130, 246, 0.2);
+        color: #93c5fd;
+      }
+
+      .meal-u {
+        background: rgba(148, 163, 184, 0.16);
+        color: #cbd5e1;
+      }
+
+      .relevance-pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 7px;
+        border-radius: 999px;
+        font-size: 0.66rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+      }
+
+      .relevance-active {
+        background: var(--primary);
+        color: #ffffff;
+      }
+
+      .relevance-upcoming {
+        background: var(--accent-soft);
+        color: var(--accent-fg);
+      }
+
+      .delete-coupon-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        border: 1px solid transparent;
+        background: transparent;
+        color: var(--text-muted);
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        cursor: pointer;
+        transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+      }
+
+      .delete-coupon-btn:hover,
+      .delete-coupon-btn:active {
+        color: var(--danger);
+        border-color: rgba(239, 68, 68, 0.35);
+        background: var(--danger-soft);
+      }
+
+      /* High-contrast pure-white QR frame for reliable optical scanning */
+      .qr-frame,
+      .transfer-qr-frame {
+        width: 100%;
+        min-width: 0;
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .qr-svg-host {
+        display: block;
+        width: 100%;
+        max-width: 172px;
+        aspect-ratio: 1 / 1;
+        margin: 0 auto;
+      }
+
+      .transfer-qr-frame .qr-svg-host {
+        max-width: 196px;
+      }
+
+      .qr-svg-host svg {
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
+        display: block;
+        shape-rendering: crispEdges;
+      }
+
+      .pass-card-footer {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        padding-top: 8px;
+        border-top: 1px solid var(--border);
+        min-width: 0;
+      }
+
+      .pass-meta-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        font-size: 0.78rem;
+        min-width: 0;
+      }
+
+      .pass-meta-label {
+        color: var(--text-muted);
+        font-weight: 500;
+        flex-shrink: 0;
+      }
+
+      .pass-meta-value {
+        font-weight: 600;
+        text-align: right;
+        overflow-wrap: break-word;
+      }
+
+      .pass-meta-timing {
+        font-size: 0.74rem;
+        color: var(--text-muted);
+      }
+
+      .pass-meta-code {
+        font-weight: 600;
+        background: var(--surface-alt);
+        border: 1px solid var(--border);
+        padding: 1px 6px;
+        border-radius: 5px;
+        text-align: right;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+
+      /* Pagination Dots */
+      .carousel-dots {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        min-height: 14px;
+      }
+
+      .carousel-dots[hidden] {
+        display: none;
+      }
+
+      .carousel-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        border: none;
+        padding: 0;
+        background: var(--border);
+        cursor: pointer;
+        transition: width 0.2s ease, background 0.2s ease;
+      }
+
+      .carousel-dot.is-relevant-dot {
+        background: rgba(59, 130, 246, 0.5);
+      }
+
+      .carousel-dot.is-active {
+        width: 22px;
+        background: var(--primary);
+      }
+
+      /* Empty State */
+      .empty-state {
+        background: var(--surface);
+        border: 1px dashed var(--border);
+        border-radius: 16px;
+        padding: 28px 18px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .empty-state[hidden] {
+        display: none;
+      }
+
+      .empty-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        background: var(--surface-alt);
+        color: var(--text-muted);
+        display: grid;
+        place-items: center;
+        margin-bottom: 2px;
+      }
+
+      .empty-title {
+        margin: 0;
+        font-size: 0.96rem;
+      }
+
+      .empty-desc {
+        margin: 0;
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        max-width: 260px;
+      }
+
+      .empty-jump-wrap {
+        margin-top: 4px;
+      }
+
+      .empty-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 4px;
+      }
+
+      /* Panels */
+      .panel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-width: 0;
+      }
+
+      .panel-danger {
+        border-color: rgba(239, 68, 68, 0.28);
+      }
+
+      .panel-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .panel-title {
+        margin: 0;
+        font-size: 0.94rem;
+        font-weight: 700;
+      }
+
+      .panel-subtitle {
+        margin: 2px 0 0;
+        font-size: 0.78rem;
+        color: var(--text-muted);
+      }
+
+      /* Buttons */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        min-height: 40px;
+        padding: 0 14px;
+        border-radius: 10px;
+        border: 1px solid transparent;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-align: center;
+        transition: opacity 0.15s ease, transform 0.1s ease, background 0.15s ease, border-color 0.15s ease;
+      }
+
+      .btn:active:not(:disabled) {
+        transform: scale(0.98);
+      }
+
+      .btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      .btn-sm {
+        min-height: 34px;
+        padding: 0 12px;
+        font-size: 0.8rem;
+        border-radius: 9px;
+      }
+
+      .btn-compact {
+        min-height: 34px;
+        padding: 0 10px;
+        font-size: 0.75rem;
+        border-radius: 9px;
+      }
+
+      .btn-full {
+        width: 100%;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: var(--primary-fg);
+      }
+
+      .btn-primary:hover:not(:disabled) {
+        background: var(--primary-hover);
+      }
+
+      .btn-secondary {
+        background: var(--surface-alt);
+        color: var(--text);
+        border-color: var(--border);
+      }
+
+      .btn-secondary:hover:not(:disabled),
+      .btn-ghost:hover:not(:disabled) {
+        border-color: var(--primary);
+      }
+
+      .btn-ghost {
+        background: transparent;
+        color: var(--text-muted);
+        border-color: var(--border);
+      }
+
+      .btn-danger {
+        background: var(--danger);
+        color: #ffffff;
+      }
+
+      .btn-danger:hover:not(:disabled) {
+        opacity: 0.9;
+      }
+
+      .btn-danger-outline {
+        background: var(--danger-soft);
+        color: var(--danger-fg);
+        border-color: rgba(239, 68, 68, 0.3);
+      }
+
+      .btn-danger-outline:hover:not(:disabled) {
+        border-color: var(--danger);
+      }
+
+      .action-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .action-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .file-btn-label {
+        user-select: none;
+      }
+
+      /* Scan & Manage Layouts */
+      .scan-layout,
+      .manage-columns {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .meal-selector-block {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .field-label {
+        font-size: 0.76rem;
+        font-weight: 600;
+        color: var(--text-muted);
+      }
+
+      .field-hint {
+        margin: 2px 0 0;
+        font-size: 0.74rem;
+        color: var(--text-muted);
+        line-height: 1.4;
+      }
+
+      .segmented-control {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 3px;
+        background: var(--surface-alt);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 3px;
+      }
+
+      .seg-btn {
+        min-height: 32px;
+        padding: 0 4px;
+        border: none;
+        border-radius: 7px;
+        background: transparent;
+        color: var(--text-muted);
+        font-size: 0.72rem;
+        font-weight: 600;
+        cursor: pointer;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        transition: background 0.15s ease, color 0.15s ease;
+      }
+
+      .seg-btn.is-selected {
+        background: var(--primary);
+        color: var(--primary-fg);
+      }
+
+      .camera-box {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        background: #000000;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+
+      .scanner-video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .scanner-overlay {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        pointer-events: none;
+      }
+
+      .scanner-reticle {
+        width: min(60%, 190px);
+        aspect-ratio: 1 / 1;
+        border: 2px solid var(--primary);
+        border-radius: 14px;
+        box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45);
+      }
+
+      .camera-placeholder {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        color: var(--text-muted);
+        display: grid;
+        place-items: center;
+        text-align: center;
+        padding: 18px;
+        font-size: 0.84rem;
+      }
+
+      .camera-placeholder[hidden] {
+        display: none;
+      }
+
+      .feedback-banner {
+        padding: 10px 12px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .feedback-success {
+        background: var(--accent-soft);
+        color: var(--accent-fg);
+      }
+
+      .feedback-info {
+        background: var(--surface-alt);
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
+
+      .feedback-error {
+        background: var(--danger-soft);
+        color: var(--danger-fg);
+      }
+
+      .transfer-rx-card {
+        background: var(--surface-alt);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .transfer-rx-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .muted-text {
+        font-size: 0.76rem;
+        color: var(--text-muted);
+      }
+
+      .chunk-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+
+      .chunk-pill {
+        min-width: 26px;
+        height: 26px;
+        padding: 0 7px;
+        border-radius: 6px;
+        font-size: 0.74rem;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        color: var(--text-muted);
+      }
+
+      .chunk-pill.is-done {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: #ffffff;
+      }
+
+      /* Stats Grid */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+      }
+
+      .stat-item {
+        background: var(--surface-alt);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 9px 6px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .stat-value {
+        font-size: 0.96rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+
+      .stat-label {
+        font-size: 0.68rem;
+        font-weight: 600;
+        color: var(--text-muted);
+      }
+
+      /* PDF Dropzone & Progress */
+      .file-dropzone {
+        border: 1.5px dashed var(--border);
+        border-radius: 12px;
+        padding: 20px 14px;
+        background: var(--surface-alt);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        text-align: center;
+        cursor: pointer;
+        color: var(--text);
+        transition: border-color 0.15s ease, background 0.15s ease;
+      }
+
+      .file-dropzone:hover,
+      .file-dropzone.is-dragover {
+        border-color: var(--primary);
+        background: var(--accent-soft);
+      }
+
+      .dropzone-title {
+        font-weight: 600;
+        font-size: 0.84rem;
+      }
+
+      .dropzone-hint {
+        font-size: 0.74rem;
+        color: var(--text-muted);
+      }
+
+      .progress-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .progress-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.76rem;
+        font-weight: 600;
+        color: var(--text-muted);
+      }
+
+      .progress-track {
+        height: 6px;
+        border-radius: 999px;
+        background: var(--surface-alt);
+        border: 1px solid var(--border);
+        overflow: hidden;
+      }
+
+      .progress-bar {
+        height: 100%;
+        background: var(--primary);
+        transition: width 0.15s ease;
+      }
+
+      .pdf-result {
+        background: var(--surface-alt);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 0.8rem;
+      }
+
+      .result-summary {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .result-stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .text-success {
+        color: var(--accent-fg);
+      }
+
+      .text-danger {
+        color: var(--danger-fg);
+      }
+
+      .failure-details {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid var(--border);
+      }
+
+      .failure-details summary {
+        cursor: pointer;
+        font-weight: 600;
+        color: var(--danger-fg);
+      }
+
+      .failure-list {
+        margin: 6px 0 0;
+        padding-left: 16px;
+        max-height: 160px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        font-size: 0.76rem;
+      }
+
+      /* Mobile Bottom Nav */
+      .bottom-nav {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: calc(var(--nav-height) + env(safe-area-inset-bottom));
+        padding-bottom: env(safe-area-inset-bottom);
+        background: rgba(10, 13, 20, 0.96);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-top: 1px solid var(--border);
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        z-index: 30;
+      }
+
+      .nav-item {
+        border: none;
+        background: transparent;
+        color: var(--text-muted);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: color 0.15s ease;
+      }
+
+      .nav-item.is-active {
+        color: var(--primary);
+      }
+
+      /* Modals */
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.8);
+        display: grid;
+        place-items: center;
+        padding: 16px;
+        z-index: 50;
+      }
+
+      .modal-backdrop[hidden] {
+        display: none;
+      }
+
+      .modal-card {
+        width: 100%;
+        max-width: min(320px, calc(100vw - 32px));
+        max-height: calc(100dvh - 32px);
+        overflow-y: auto;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.75);
+      }
+
+      .modal-card-sm {
+        max-width: min(310px, calc(100vw - 32px));
+      }
+
+      .modal-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .modal-title {
+        margin: 0;
+        font-size: 0.98rem;
+        font-weight: 700;
+      }
+
+      .modal-subtitle {
+        margin: 2px 0 0;
+        font-size: 0.76rem;
+        color: var(--text-muted);
+      }
+
+      .transfer-controls {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .chunk-counter {
+        font-weight: 700;
+        font-size: 0.84rem;
+        padding: 0 4px;
+        text-align: center;
+      }
+
+      .transfer-tip {
+        margin: 0;
+        font-size: 0.76rem;
+        color: var(--text-muted);
+        text-align: center;
+      }
+
+      .confirm-message {
+        margin: 0;
+        font-size: 0.84rem;
+        color: var(--text-muted);
+        line-height: 1.45;
+      }
+
+      .confirm-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 2px;
+      }
+
+      /* Toast */
+      .toast {
+        position: fixed;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + 12px);
+        max-width: calc(100% - 32px);
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.6);
+        z-index: 60;
+        text-align: center;
+      }
+
+      .toast-info {
+        background: #1e293b;
+        color: #f8fafc;
+      }
+
+      .toast-success {
+        background: var(--primary);
+        color: #ffffff;
+      }
+
+      .toast-error {
+        background: var(--danger);
+        color: #ffffff;
+      }
+
+      /* =============================
+         Desktop & Tablet Responsive UI
+         ============================= */
+      @media (min-width: 820px) {
+        .app-shell {
+          padding-bottom: 40px;
+        }
+
+        .header-inner {
+          max-width: 980px;
+          padding: 8px 24px;
+          display: grid;
+          grid-template-columns: 1fr auto 1fr;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .header-actions {
+          justify-self: end;
+        }
+
+        .desktop-nav {
+          display: inline-flex;
+          align-items: center;
+          gap: 3px;
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-radius: 10px;
+          padding: 3px;
+        }
+
+        .desktop-nav .nav-item {
+          flex-direction: row;
+          gap: 6px;
+          padding: 5px 14px;
+          border-radius: 7px;
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: var(--text-muted);
+          transition: background 0.15s ease, color 0.15s ease;
+        }
+
+        .desktop-nav .nav-item:hover:not(.is-active) {
+          color: var(--text);
+          background: var(--surface-alt);
+        }
+
+        .desktop-nav .nav-item.is-active {
+          background: var(--primary);
+          color: var(--primary-fg);
+        }
+
+        .bottom-nav {
+          display: none;
+        }
+
+        .main-content {
+          max-width: 980px;
+          padding: 20px 24px 32px;
+        }
+
+        .view {
+          gap: 16px;
+        }
+
+        .day-readable {
+          font-size: 1.15rem;
+        }
+
+        .day-pass-count {
+          font-size: 0.8rem;
+        }
+
+        /* Responsive Desktop Grid: 4 cards fit comfortably within 980px without overflow or overlap */
+        .pass-carousel {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 224px));
+          justify-content: center;
+          gap: 14px;
+          margin: 0;
+          padding: 4px 0 8px;
+          overflow: visible;
+        }
+
+        .pass-slide {
+          flex: none;
+          width: 100%;
+          max-width: 100%;
+          min-width: 0;
+          scroll-snap-align: none;
+          padding: 0;
+        }
+
+        .pass-card {
+          max-width: 100%;
+          height: 100%;
+          padding: 12px;
+        }
+
+        .pass-card:hover {
+          border-color: rgba(59, 130, 246, 0.55);
+        }
+
+        .qr-svg-host {
+          max-width: 164px;
+        }
+
+        .empty-state {
+          max-width: 460px;
+          width: 100%;
+          margin: 20px auto;
+          padding: 36px 24px;
+        }
+
+        /* Scan View: 2-Column Split */
+        .scan-layout {
+          display: grid;
+          grid-template-columns: minmax(0, 1.25fr) minmax(290px, 0.85fr);
+          gap: 16px;
+          align-items: start;
+        }
+
+        .camera-box {
+          aspect-ratio: 16 / 10;
+        }
+
+        /* Manage View: Bento Grid */
+        .panel {
+          padding: 18px;
+          gap: 14px;
+        }
+
+        .stats-grid {
+          gap: 12px;
+        }
+
+        .stat-item {
+          padding: 12px 10px;
+        }
+
+        .stat-value {
+          font-size: 1.25rem;
+        }
+
+        .stat-label {
+          font-size: 0.72rem;
+        }
+
+        .manage-columns {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 16px;
+          align-items: stretch;
+        }
+
+        .file-dropzone {
+          padding: 26px 18px;
+        }
+
+        .danger-actions-grid {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 10px;
+        }
+
+        /* Desktop Toast at bottom-right */
+        .toast {
+          left: auto;
+          right: 20px;
+          bottom: 20px;
+          transform: none;
+          max-width: 380px;
+          text-align: left;
+          padding: 10px 16px;
+        }
+      }
+    </style>
+  </body>
+</html>

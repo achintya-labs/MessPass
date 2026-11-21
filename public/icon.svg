@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#000000"/>
+  <rect x="76" y="76" width="360" height="360" rx="52" fill="#ffffff"/>
+  <!-- Top-left finder -->
+  <rect x="116" y="116" width="112" height="112" rx="20" fill="#000000"/>
+  <rect x="138" y="138" width="68" height="68" rx="10" fill="#ffffff"/>
+  <rect x="156" y="156" width="32" height="32" rx="6" fill="#3b82f6"/>
+  <!-- Top-right finder -->
+  <rect x="284" y="116" width="112" height="112" rx="20" fill="#000000"/>
+  <rect x="306" y="138" width="68" height="68" rx="10" fill="#ffffff"/>
+  <rect x="324" y="156" width="32" height="32" rx="6" fill="#000000"/>
+  <!-- Bottom-left finder -->
+  <rect x="116" y="284" width="112" height="112" rx="20" fill="#000000"/>
+  <rect x="138" y="306" width="68" height="68" rx="10" fill="#ffffff"/>
+  <rect x="156" y="324" width="32" height="32" rx="6" fill="#000000"/>
+  <!-- Data modules -->
+  <rect x="284" y="284" width="44" height="44" rx="8" fill="#3b82f6"/>
+  <rect x="352" y="284" width="44" height="44" rx="8" fill="#000000"/>
+  <rect x="284" y="352" width="44" height="44" rx="8" fill="#000000"/>
+  <rect x="352" y="352" width="44" height="44" rx="8" fill="#3b82f6"/>
+</svg>
