@@ -2,6 +2,7 @@
   "name": "mess-pass",
   "version": "1.0.0",
   "description": "100% offline-first mobile web app for managing daily mess QR coupons",
+  "license": "AGPL-1.0-only",
   "private": true,
   "type": "module",
   "scripts": {
