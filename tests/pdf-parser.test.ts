@@ -2,6 +2,7 @@ import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import QRCode from 'qrcode';
 import {
+  extractCouponMetadataFromLines,
   inferMealFromText,
   parseCouponsFromPDF,
   type PdfParseProgress,
@@ -543,5 +544,29 @@ describe('End-to-End Multi-Page PDF Parsing (pdfjs-dist + jsQR)', () => {
       nov22.map((c) => `${c.meal}:${c.id}`),
       ['B:PDF-101', 'L:PDF-102', 'S:PDF-105', 'D:PDF-103']
     );
+  });
+
+  it('extracts roll number and mess name from coupon lines and falls back to empty when unavailable', () => {
+    const meta = extractCouponMetadataFromLines([
+      'Office of Hostel Management',
+      'IIT - Madras',
+      'GUEST COUPON',
+      'Jul 26, 2025',
+      'EE23B189',
+      'BREAKFAST',
+      '( Not eligible for Return / Refund )',
+      'SGR Himalaya FF',
+      'Left Veg',
+      'S.No:',
+      '9334171079820',
+      'Authority Sign',
+    ]);
+    assert.deepEqual(meta, {
+      rollNo: 'EE23B189',
+      mess: 'SGR Himalaya FF · Left Veg',
+    });
+
+    const missing = extractCouponMetadataFromLines(['BREAKFAST', 'S.No: 123']);
+    assert.deepEqual(missing, { rollNo: '', mess: '' });
   });
 });

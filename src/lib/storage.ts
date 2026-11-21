@@ -23,6 +23,8 @@ export interface Coupon {
   displayDate: string;
   meal: MealType;
   id: string;
+  rollNo: string;
+  mess: string;
   rawPayload: string;
 }
 
@@ -30,6 +32,8 @@ export interface CouponInput {
   epochDays: number;
   meal: MealType;
   id: string;
+  rollNo?: string;
+  mess?: string;
 }
 
 export interface ParsedQR {
@@ -268,10 +272,17 @@ export function formatCouponPayload(id: string, epochDays: number): string {
   return `${id}\`${epochDaysToDisplayDate(epochDays)}`;
 }
 
+export function sanitizeMetaField(value?: string): string {
+  if (!value) return '';
+  return value.replace(/[\r\n|]+/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
 export function buildCoupon(
   epochDays: number,
   meal: MealType,
-  id: string
+  id: string,
+  rollNo = '',
+  mess = ''
 ): Coupon {
   const displayDate = epochDaysToDisplayDate(epochDays);
   return {
@@ -280,6 +291,8 @@ export function buildCoupon(
     displayDate,
     meal,
     id,
+    rollNo: sanitizeMetaField(rollNo),
+    mess: sanitizeMetaField(mess),
     rawPayload: `${id}\`${displayDate}`,
   };
 }
@@ -331,30 +344,39 @@ export function compareCoupons(a: Coupon, b: Coupon): number {
   return a.id.localeCompare(b.id);
 }
 
+function mergeTwoCoupons(existing: Coupon, incoming: Coupon): Coupon {
+  return buildCoupon(
+    existing.epochDays,
+    existing.meal === 'U' && incoming.meal !== 'U' ? incoming.meal : existing.meal,
+    existing.id,
+    existing.rollNo || incoming.rollNo,
+    existing.mess || incoming.mess
+  );
+}
+
 /**
  * Serializes coupons into compact line-delimited format:
- * `<epoch_days_base36>|<meal_char>|<id>`
+ * `<epoch_days_base36>|<meal_char>|<id>` (or with `|<rollNo>|<mess>` when metadata is present)
  */
 export function serializeCoupons(coupons: Coupon[]): string {
   const deduped = new Map<string, Coupon>();
   for (const c of coupons) {
     const key = couponKey(c.epochDays, c.id);
     const existing = deduped.get(key);
-    if (!existing) {
-      deduped.set(key, c);
-    } else if (existing.meal === 'U' && c.meal !== 'U') {
-      deduped.set(key, c);
-    }
+    deduped.set(key, existing ? mergeTwoCoupons(existing, c) : c);
   }
 
   return Array.from(deduped.values())
     .sort(compareCoupons)
-    .map((c) => `${c.epochDays.toString(36)}|${c.meal}|${c.id}`)
+    .map((c) => {
+      const base = `${c.epochDays.toString(36)}|${c.meal}|${c.id}`;
+      return c.rollNo || c.mess ? `${base}|${c.rollNo}|${c.mess}` : base;
+    })
     .join('\n');
 }
 
 /**
- * Parses compact line-delimited `<epoch_days_base36>|<meal_char>|<id>` storage text,
+ * Parses compact line-delimited `<epoch_days_base36>|<meal_char>|<id>[|<rollNo>|<mess>]` storage text,
  * deduplicating by full QR payload (`id` + date) and preferring known meal types over `U`.
  */
 export function deserializeCoupons(raw: string): Coupon[] {
@@ -367,14 +389,10 @@ export function deserializeCoupons(raw: string): Coupon[] {
     const trimmed = line.trim();
     if (!trimmed) continue;
 
-    const firstPipe = trimmed.indexOf('|');
-    if (firstPipe <= 0) continue;
-    const secondPipe = trimmed.indexOf('|', firstPipe + 1);
-    if (secondPipe <= firstPipe + 1) continue;
+    const parts = trimmed.split('|');
+    if (parts.length < 3) continue;
 
-    const epochBase36 = trimmed.slice(0, firstPipe);
-    const mealChar = trimmed.slice(firstPipe + 1, secondPipe);
-    const id = trimmed.slice(secondPipe + 1);
+    const [epochBase36, mealChar, id, rawRollNo = '', rawMess = ''] = parts;
 
     if (!/^[0-9a-z]+$/i.test(epochBase36)) continue;
     const epochDays = parseInt(epochBase36, 36);
@@ -382,13 +400,10 @@ export function deserializeCoupons(raw: string): Coupon[] {
     if (!isMealType(mealChar)) continue;
     if (!id || /[\r\n|]/.test(id)) continue;
 
+    const candidate = buildCoupon(epochDays, mealChar, id, rawRollNo, rawMess);
     const key = couponKey(epochDays, id);
     const existing = map.get(key);
-    if (!existing) {
-      map.set(key, buildCoupon(epochDays, mealChar, id));
-    } else if (existing.meal === 'U' && mealChar !== 'U') {
-      map.set(key, buildCoupon(epochDays, mealChar, id));
-    }
+    map.set(key, existing ? mergeTwoCoupons(existing, candidate) : candidate);
   }
 
   return Array.from(map.values()).sort(compareCoupons);
@@ -432,21 +447,40 @@ export function mergeCoupons(
 
   for (const item of incoming) {
     if (!item.id || /[\r\n|]/.test(item.id)) continue;
+    const inRollNo = sanitizeMetaField(item.rollNo);
+    const inMess = sanitizeMetaField(item.mess);
     const key = couponKey(item.epochDays, item.id);
     const existing = map.get(key);
 
     if (!existing) {
-      map.set(key, buildCoupon(item.epochDays, item.meal, item.id));
+      map.set(key, buildCoupon(item.epochDays, item.meal, item.id, inRollNo, inMess));
       added++;
-    } else if (existing.meal === 'U' && item.meal !== 'U') {
-      map.set(key, buildCoupon(item.epochDays, item.meal, item.id));
-      updated++;
-    } else if (
-      options.overwriteKnownMeal &&
-      item.meal !== 'U' &&
-      existing.meal !== item.meal
+      continue;
+    }
+
+    const nextMeal =
+      existing.meal === 'U' && item.meal !== 'U'
+        ? item.meal
+        : options.overwriteKnownMeal && item.meal !== 'U'
+          ? item.meal
+          : existing.meal;
+
+    const nextRollNo =
+      options.overwriteKnownMeal && inRollNo
+        ? inRollNo
+        : existing.rollNo || inRollNo;
+
+    const nextMess =
+      options.overwriteKnownMeal && inMess
+        ? inMess
+        : existing.mess || inMess;
+
+    if (
+      nextMeal !== existing.meal ||
+      nextRollNo !== existing.rollNo ||
+      nextMess !== existing.mess
     ) {
-      map.set(key, buildCoupon(item.epochDays, item.meal, item.id));
+      map.set(key, buildCoupon(item.epochDays, nextMeal, item.id, nextRollNo, nextMess));
       updated++;
     } else {
       duplicates++;

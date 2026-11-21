@@ -3,6 +3,7 @@ import pdfWorkerUrl from 'pdfjs-dist/legacy/build/pdf.worker.min.mjs?url';
 import jsQR from 'jsqr';
 import {
   parseCouponPayload,
+  sanitizeMetaField,
   type CouponInput,
   type MealType,
 } from './storage';
@@ -57,6 +58,95 @@ export function inferMealFromText(text: string): MealType {
   if (upper.includes('DINNER')) return 'D';
 
   return 'U';
+}
+
+const DISCLAIMER_PATTERN = /\b(return|refund|eligible)\b/i;
+const STOP_LINE_PATTERN = /^(s\.?\s*no\b|authority\s+sign\b)/i;
+const HEADER_OR_DATE_PATTERN =
+  /^(office\s+of\b|iit\b|guest\s+coupon\b|mess\s+coupon\b|[a-z]{3,9}\s+\d{1,2}\s*,\s*\d{4}$)/i;
+
+interface PositionedTextItem {
+  str: string;
+  x: number;
+  y: number;
+}
+
+export function extractLinesFromTextItems(
+  items: ReadonlyArray<{ str?: string; transform?: number[] }>
+): string[] {
+  const positioned: PositionedTextItem[] = [];
+  for (const item of items) {
+    const str = typeof item.str === 'string' ? item.str.trim() : '';
+    if (!str) continue;
+    const tr = Array.isArray(item.transform) ? item.transform : [];
+    const x = typeof tr[4] === 'number' ? tr[4] : 0;
+    const y = typeof tr[5] === 'number' ? tr[5] : 0;
+    positioned.push({ str, x, y });
+  }
+
+  positioned.sort((a, b) => {
+    const yDiff = b.y - a.y;
+    if (Math.abs(yDiff) > 4) return yDiff;
+    return a.x - b.x;
+  });
+
+  const lines: Array<{ y: number; parts: string[] }> = [];
+  for (const item of positioned) {
+    const last = lines[lines.length - 1];
+    if (last && Math.abs(last.y - item.y) <= 4) {
+      last.parts.push(item.str);
+    } else {
+      lines.push({ y: item.y, parts: [item.str] });
+    }
+  }
+
+  return lines.map((l) => l.parts.join(' ').replace(/\s+/g, ' ').trim()).filter(Boolean);
+}
+
+/**
+ * Extracts roll number and mess name from coupon PDF lines:
+ * - Line before meal name -> roll number
+ * - Meal name line -> meal type
+ * - Disclaimer line -> skipped
+ * - Next up to 2 lines (before S.No / Authority Sign) -> mess name
+ */
+export function extractCouponMetadataFromLines(lines: readonly string[]): {
+  rollNo: string;
+  mess: string;
+} {
+  const mealIdx = lines.findIndex((line) => inferMealFromText(line) !== 'U');
+  if (mealIdx === -1) {
+    return { rollNo: '', mess: '' };
+  }
+
+  let rollNo = '';
+  if (mealIdx > 0) {
+    const candidate = lines[mealIdx - 1];
+    if (!HEADER_OR_DATE_PATTERN.test(candidate)) {
+      rollNo = sanitizeMetaField(candidate);
+    }
+  }
+
+  let cursor = mealIdx + 1;
+  if (cursor < lines.length) {
+    const nextLine = lines[cursor];
+    if (DISCLAIMER_PATTERN.test(nextLine) || /^\(.*\)$/.test(nextLine)) {
+      cursor++;
+    }
+  }
+
+  const messParts: string[] = [];
+  while (cursor < lines.length && messParts.length < 2) {
+    const line = lines[cursor];
+    if (STOP_LINE_PATTERN.test(line)) break;
+    messParts.push(sanitizeMetaField(line));
+    cursor++;
+  }
+
+  return {
+    rollNo,
+    mess: messParts.filter(Boolean).join(' · '),
+  };
 }
 
 async function decodeQrFromPage(
@@ -141,10 +231,16 @@ export async function parseCouponsFromPDF(
         page = await pdfDoc.getPage(pageNum);
 
         const textContent = await page.getTextContent();
-        const pageText = textContent.items
-          .map((item) => ('str' in item ? item.str : ''))
+        const typedItems = textContent.items as ReadonlyArray<{
+          str?: string;
+          transform?: number[];
+        }>;
+        const pageText = typedItems
+          .map((item) => (typeof item.str === 'string' ? item.str : ''))
           .join(' ');
         const meal = inferMealFromText(pageText);
+        const lines = extractLinesFromTextItems(typedItems);
+        const { rollNo, mess } = extractCouponMetadataFromLines(lines);
 
         const qrRaw = await decodeQrFromPage(page, canvas);
         if (!qrRaw) {
@@ -166,6 +262,8 @@ export async function parseCouponsFromPDF(
               epochDays: parsed.epochDays,
               meal,
               id: parsed.id,
+              rollNo,
+              mess,
               rawPayload: parsed.rawPayload,
               dateISO: parsed.dateISO,
               displayDate: parsed.displayDate,

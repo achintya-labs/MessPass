@@ -1,6 +1,5 @@
 import {
   MEAL_LABELS,
-  MEAL_TIMING_LABELS,
   deleteCoupon,
   epochDaysToDisplayDate,
   getAvailableDates,
@@ -211,15 +210,12 @@ export async function renderPassesForSelectedDate(
         }</span>`
       : '';
 
-    const timingText = MEAL_TIMING_LABELS[coupon.meal] ?? '';
-    const timingRowHtml = timingText
-      ? `
-          <div class="pass-meta-row">
-            <span class="pass-meta-label">Time</span>
-            <span class="pass-meta-value pass-meta-timing">${escapeHtml(timingText)}</span>
-          </div>
-        `
-      : '';
+    const rollHtml = coupon.rollNo
+      ? `<span class="pass-meta-value">${escapeHtml(coupon.rollNo)}</span>`
+      : `<span class="pass-meta-value pass-meta-unknown">Unknown</span>`;
+    const messHtml = coupon.mess
+      ? `<span class="pass-meta-value pass-meta-mess">${escapeHtml(coupon.mess)}</span>`
+      : `<span class="pass-meta-value pass-meta-unknown">Unknown</span>`;
 
     const mealClass = `meal-badge meal-${coupon.meal.toLowerCase()}`;
     slide.innerHTML = `
@@ -252,14 +248,13 @@ export async function renderPassesForSelectedDate(
         </div>
 
         <div class="pass-card-footer">
-          ${timingRowHtml}
           <div class="pass-meta-row">
-            <span class="pass-meta-label">Date</span>
-            <span class="pass-meta-value">${escapeHtml(coupon.displayDate)}</span>
+            <span class="pass-meta-label">Roll No</span>
+            ${rollHtml}
           </div>
           <div class="pass-meta-row">
-            <span class="pass-meta-label">ID</span>
-            <code class="pass-meta-code">${escapeHtml(coupon.id)}</code>
+            <span class="pass-meta-label">Mess</span>
+            ${messHtml}
           </div>
         </div>
       </div>

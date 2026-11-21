@@ -435,3 +435,32 @@ describe('Time-of-Day Relevant Meal Selection', () => {
     });
   });
 });
+
+describe('Roll Number & Mess Metadata Persistence', () => {
+  beforeEach(() => {
+    installMockLocalStorage();
+  });
+
+  it('stores and upgrades rollNo and mess while remaining backwards-compatible with unknown/empty', () => {
+    const epoch = isoToEpochDays('2025-07-26')!;
+    mergeCoupons([{ epochDays: epoch, meal: 'B', id: '9334171079820' }]);
+    let [coupon] = getCouponsForDate('2025-07-26');
+    assert.equal(coupon.rollNo, '');
+    assert.equal(coupon.mess, '');
+
+    const res = mergeCoupons([
+      {
+        epochDays: epoch,
+        meal: 'B',
+        id: '9334171079820',
+        rollNo: 'EE23B189',
+        mess: 'SGR Himalaya FF · Left Veg',
+      },
+    ]);
+    assert.equal(res.updated, 1);
+
+    [coupon] = getCouponsForDate('2025-07-26');
+    assert.equal(coupon.rollNo, 'EE23B189');
+    assert.equal(coupon.mess, 'SGR Himalaya FF · Left Veg');
+  });
+});

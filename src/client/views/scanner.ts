@@ -29,6 +29,8 @@ const transferRxCard = document.getElementById('transfer-rx-card') as HTMLDivEle
 const transferRxCount = document.getElementById('transfer-rx-count') as HTMLDivElement;
 const transferRxPills = document.getElementById('transfer-rx-pills') as HTMLDivElement;
 const btnResetRx = document.getElementById('btn-reset-rx') as HTMLButtonElement;
+const scanRollInput = document.getElementById('scan-roll-input') as HTMLInputElement;
+const scanMessInput = document.getElementById('scan-mess-input') as HTMLInputElement;
 
 let scanMealOption: ScanMealOption = 'AUTO';
 let cameraStream: MediaStream | null = null;
@@ -119,8 +121,10 @@ function handleScannedPayload(raw: string): void {
   }
 
   const meal: MealType = scanMealOption === 'AUTO' ? 'U' : scanMealOption;
+  const rollNo = scanRollInput?.value.trim() ?? '';
+  const mess = scanMessInput?.value.trim() ?? '';
   const stats = mergeCoupons(
-    [{ epochDays: parsed.epochDays, meal, id: parsed.id }],
+    [{ epochDays: parsed.epochDays, meal, id: parsed.id, rollNo, mess }],
     { overwriteKnownMeal: scanMealOption !== 'AUTO' }
   );
   callbacks?.onCouponsChanged();

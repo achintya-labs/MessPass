@@ -25,6 +25,41 @@
   line-height: 1.4;
 }
 
+.scan-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.scan-meta-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.text-input {
+  width: 100%;
+  min-height: 36px;
+  padding: 6px 10px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--surface-alt);
+  color: var(--text);
+  font-size: 0.82rem;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.text-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.75;
+}
+
+.text-input:focus {
+  border-color: var(--primary);
+}
+
 .segmented-control {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
