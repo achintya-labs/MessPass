@@ -1,5 +1,31 @@
 apply plugin: 'com.android.application'
 
+def envFile = rootProject.file('../.env')
+def envProperties = new Properties()
+if (envFile.exists()) {
+    envFile.eachLine { rawLine ->
+        def line = rawLine.trim()
+        if (line && !line.startsWith('#') && line.contains('=')) {
+            def idx = line.indexOf('=')
+            def k = line.substring(0, idx).trim()
+            def v = line.substring(idx + 1).trim().replaceAll('^["\']|["\']$', '')
+            envProperties[k] = v
+        }
+    }
+}
+
+def keystorePropertiesFile = rootProject.file('keystore.properties')
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+def releaseStoreFile = System.getenv('KEYSTORE_FILE') ?: envProperties['KEYSTORE_FILE'] ?: keystoreProperties['storeFile']
+def releaseStorePassword = System.getenv('KEYSTORE_PASSWORD') ?: envProperties['KEYSTORE_PASSWORD'] ?: keystoreProperties['storePassword']
+def releaseKeyAlias = System.getenv('KEY_ALIAS') ?: envProperties['KEY_ALIAS'] ?: keystoreProperties['keyAlias']
+def releaseKeyPassword = System.getenv('KEY_PASSWORD') ?: envProperties['KEY_PASSWORD'] ?: keystoreProperties['keyPassword']
+def hasReleaseSigning = releaseStoreFile && releaseStorePassword && releaseKeyAlias && releaseKeyPassword
+
 android {
     namespace = "com.messpass.app"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -16,8 +42,21 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        release {
+            if (hasReleaseSigning) {
+                storeFile file(releaseStoreFile)
+                storePassword releaseStorePassword
+                keyAlias releaseKeyAlias
+                keyPassword releaseKeyPassword
+            }
+        }
+    }
     buildTypes {
         release {
+            if (hasReleaseSigning) {
+                signingConfig signingConfigs.release
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

@@ -17,7 +17,8 @@
     "cap:open": "npx cap open android",
     "android:debug": "npm run cap:sync && cd android && ./gradlew assembleDebug",
     "android:release": "npm run cap:sync && cd android && ./gradlew assembleRelease",
-    "android:install": "npm run cap:sync && cd android && ./gradlew installDebug"
+    "android:install": "npm run cap:sync && cd android && ./gradlew installDebug",
+    "android:verify": "bash -c 'APK=android/app/build/outputs/apk/release/app-release.apk; APKSIGNER=$(ls -1 ${ANDROID_HOME:-$HOME/Android/Sdk}/build-tools/*/apksigner 2>/dev/null | tail -n 1); if [ -n \"$APKSIGNER\" ]; then \"$APKSIGNER\" verify --print-certs \"$APK\"; else keytool -printcert -jarfile \"$APK\"; fi'"
   },
   "dependencies": {
     "@capacitor/core": "^8.6.2",
