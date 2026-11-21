@@ -51,10 +51,12 @@
   transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
 }
 
-.subtle-icon-btn:hover {
-  color: var(--text);
-  background: var(--surface-alt);
-  border-color: var(--border);
+@media (hover: hover) and (pointer: fine) {
+  .subtle-icon-btn:hover {
+    color: var(--text);
+    background: var(--surface-alt);
+    border-color: var(--border);
+  }
 }
 
 .subtle-icon-btn:active {
@@ -100,9 +102,11 @@
   transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
 }
 
-.today-btn:hover {
-  color: var(--text);
-  background: var(--surface-alt);
+@media (hover: hover) and (pointer: fine) {
+  .today-btn:hover {
+    color: var(--text);
+    background: var(--surface-alt);
+  }
 }
 
 .today-btn.is-today {
@@ -141,9 +145,11 @@
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
-.date-chip:hover {
-  border-color: var(--primary);
-  color: var(--text);
+@media (hover: hover) and (pointer: fine) {
+  .date-chip:hover {
+    border-color: var(--primary);
+    color: var(--text);
+  }
 }
 
 .date-chip.is-active {
@@ -212,9 +218,14 @@
   opacity: 0.48;
 }
 
-.pass-card.is-dimmed:hover,
 .pass-card.is-dimmed:focus-within {
   opacity: 0.96;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pass-card.is-dimmed:hover {
+    opacity: 0.96;
+  }
 }
 
 .pass-card-top {
@@ -304,11 +315,18 @@
   transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
 }
 
-.delete-coupon-btn:hover,
 .delete-coupon-btn:active {
   color: var(--danger);
   border-color: rgba(239, 68, 68, 0.35);
   background: var(--danger-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .delete-coupon-btn:hover {
+    color: var(--danger);
+    border-color: rgba(239, 68, 68, 0.35);
+    background: var(--danger-soft);
+  }
 }
 
 /* High-contrast pure-white QR frame for reliable optical scanning */

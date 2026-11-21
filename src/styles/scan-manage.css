@@ -258,10 +258,16 @@
   transition: border-color 0.15s ease, background 0.15s ease;
 }
 
-.file-dropzone:hover,
 .file-dropzone.is-dragover {
   border-color: var(--primary);
   background: var(--accent-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .file-dropzone:hover {
+    border-color: var(--primary);
+    background: var(--accent-soft);
+  }
 }
 
 .dropzone-title {

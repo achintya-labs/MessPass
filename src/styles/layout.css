@@ -61,9 +61,11 @@
   transition: color 0.15s ease, background 0.15s ease;
 }
 
-.github-link:hover {
-  color: var(--text);
-  background: var(--surface-alt);
+@media (hover: hover) and (pointer: fine) {
+  .github-link:hover {
+    color: var(--text);
+    background: var(--surface-alt);
+  }
 }
 
 /* Main */
@@ -213,19 +215,10 @@
   color: var(--primary-fg);
 }
 
-.btn-primary:hover:not(:disabled) {
-  background: var(--primary-hover);
-}
-
 .btn-secondary {
   background: var(--surface-alt);
   color: var(--text);
   border-color: var(--border);
-}
-
-.btn-secondary:hover:not(:disabled),
-.btn-ghost:hover:not(:disabled) {
-  border-color: var(--primary);
 }
 
 .btn-ghost {
@@ -239,18 +232,29 @@
   color: #ffffff;
 }
 
-.btn-danger:hover:not(:disabled) {
-  opacity: 0.9;
-}
-
 .btn-danger-outline {
   background: var(--danger-soft);
   color: var(--danger-fg);
   border-color: rgba(239, 68, 68, 0.3);
 }
 
-.btn-danger-outline:hover:not(:disabled) {
-  border-color: var(--danger);
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover:not(:disabled) {
+    background: var(--primary-hover);
+  }
+
+  .btn-secondary:hover:not(:disabled),
+  .btn-ghost:hover:not(:disabled) {
+    border-color: var(--primary);
+  }
+
+  .btn-danger:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+
+  .btn-danger-outline:hover:not(:disabled) {
+    border-color: var(--danger);
+  }
 }
 
 .action-stack {
