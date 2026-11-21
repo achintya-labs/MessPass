@@ -1,4 +1,4 @@
-name: Build & Release Android APK
+name: Build & Release
 
 on:
   push:
@@ -14,7 +14,7 @@ env:
 
 jobs:
   release:
-    name: Build APK & Create GitHub Release
+    name: Build & Release
     runs-on: ubuntu-latest
 
     steps:
@@ -27,12 +27,6 @@ jobs:
           node-version: '22'
           cache: 'npm'
 
-      - name: Set up JDK 21
-        uses: actions/setup-java@v5
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-
       - name: Install dependencies
         run: npm ci
 
@@ -42,11 +36,20 @@ jobs:
           npm run build
           npm test
 
+      - name: Set up JDK 21
+        if: "!contains(github.ref_name, '-web')"
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
       - name: Sync Capacitor Android
+        if: "!contains(github.ref_name, '-web')"
         run: npx cap sync android
 
       - name: Build Android APK
         id: build_apk
+        if: "!contains(github.ref_name, '-web')"
         env:
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -72,11 +75,11 @@ jobs:
           echo "apk_path=$APK_OUT" >> "$GITHUB_OUTPUT"
 
       - name: Verify release APK signature
-        if: steps.build_apk.outputs.signed == 'true'
+        if: "!contains(github.ref_name, '-web') && steps.build_apk.outputs.signed == 'true'"
         run: npm run android:verify
 
       - name: Create GitHub Release
-        if: startsWith(github.ref, 'refs/tags/')
+        if: "startsWith(github.ref, 'refs/tags/') && !contains(github.ref_name, '-web')"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -86,4 +89,16 @@ jobs:
             gh release upload "$TAG" "$APK" --clobber
           else
             gh release create "$TAG" "$APK" --generate-notes --title "$TAG"
+          fi
+
+      - name: Deploy to Cloudflare
+        if: "startsWith(github.ref, 'refs/tags/') && !contains(github.ref_name, '-app')"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -n "$CLOUDFLARE_API_TOKEN" ]; then
+            npx wrangler deploy
+          else
+            echo "CLOUDFLARE_API_TOKEN not set; skipping Cloudflare deploy."
           fi
