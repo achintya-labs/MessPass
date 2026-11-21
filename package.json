@@ -10,7 +10,9 @@
     "preview": "astro preview",
     "astro": "astro",
     "typecheck": "tsc --noEmit",
-    "test": "node --import ./tests/setup-hooks.mjs --test tests/*.test.ts"
+    "test": "node --import ./tests/setup-hooks.mjs --test tests/*.test.ts",
+    "cf:dev": "astro build && wrangler dev",
+    "deploy": "astro build && wrangler deploy"
   },
   "dependencies": {
     "astro": "^7.4.13",
@@ -21,6 +23,7 @@
   },
   "devDependencies": {
     "@types/qrcode": "^1.5.6",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "wrangler": "^4.166.0"
   }
 }
