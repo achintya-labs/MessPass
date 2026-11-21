@@ -2236,7 +2236,7 @@
 
       .pass-card {
         width: 100%;
-        max-width: 280px;
+        max-width: 100%;
         margin: 0 auto;
         background: var(--surface);
         border: 1.5px solid var(--border);
@@ -2377,13 +2377,13 @@
       .qr-svg-host {
         display: block;
         width: 100%;
-        max-width: 172px;
+        max-width: min(100%, 48dvh);
         aspect-ratio: 1 / 1;
         margin: 0 auto;
       }
 
       .transfer-qr-frame .qr-svg-host {
-        max-width: 196px;
+        max-width: min(100%, 50dvh);
       }
 
       .qr-svg-host svg {
@@ -3038,8 +3038,8 @@
 
       .modal-card {
         width: 100%;
-        max-width: min(320px, calc(100vw - 32px));
-        max-height: calc(100dvh - 32px);
+        max-width: min(420px, calc(100vw - 24px));
+        max-height: calc(100dvh - 24px);
         overflow-y: auto;
         background: var(--surface);
         border: 1px solid var(--border);
@@ -3245,6 +3245,14 @@
 
         .qr-svg-host {
           max-width: 164px;
+        }
+
+        .transfer-qr-frame .qr-svg-host {
+          max-width: 220px;
+        }
+
+        .modal-card {
+          max-width: 340px;
         }
 
         .empty-state {
