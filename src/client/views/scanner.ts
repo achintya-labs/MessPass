@@ -34,7 +34,8 @@ const scanMessInput = document.getElementById('scan-mess-input') as HTMLInputEle
 
 let scanMealOption: ScanMealOption = 'AUTO';
 let cameraStream: MediaStream | null = null;
-let scanRafId: number | null = null;
+let scanTimerId: number | null = null;
+let scannerCtx: CanvasRenderingContext2D | null = null;
 let lastScannedRaw = '';
 let lastScannedTime = 0;
 let rxSession: { total: number; parts: Map<number, string> } | null = null;
@@ -149,45 +150,88 @@ function handleScannedPayload(raw: string): void {
   }
 }
 
-const SCAN_INTERVAL_MS = 140;
-const MAX_SCAN_WIDTH = 640;
-let lastDecodeTime = 0;
+interface NativeBarcodeDetector {
+  detect(source: HTMLVideoElement): Promise<Array<{ rawValue?: string }>>;
+}
 
-function scanFrameLoop(now: number): void {
+interface BarcodeDetectorCtor {
+  new (opts?: { formats?: string[] }): NativeBarcodeDetector;
+}
+
+const SCAN_INTERVAL_MS = 180;
+const MAX_SCAN_WIDTH = 420;
+let nativeDetector: NativeBarcodeDetector | null | undefined;
+
+function getNativeBarcodeDetector(): NativeBarcodeDetector | null {
+  if (nativeDetector !== undefined) return nativeDetector;
+  const Ctor = (window as Window & { BarcodeDetector?: BarcodeDetectorCtor })
+    .BarcodeDetector;
+  if (!Ctor) {
+    nativeDetector = null;
+    return null;
+  }
+  try {
+    nativeDetector = new Ctor({ formats: ['qr_code'] });
+  } catch {
+    nativeDetector = null;
+  }
+  return nativeDetector;
+}
+
+function decodeWithJsQr(): void {
+  if (!scannerCtx) {
+    scannerCtx = scannerCanvas.getContext('2d', { willReadFrequently: true });
+  }
+  const ctx = scannerCtx;
+  if (!ctx) return;
+
+  const vw = scannerVideo.videoWidth;
+  const vh = scannerVideo.videoHeight;
+  const scale = vw > MAX_SCAN_WIDTH ? MAX_SCAN_WIDTH / vw : 1;
+  const w = Math.round(vw * scale);
+  const h = Math.round(vh * scale);
+  if (scannerCanvas.width !== w || scannerCanvas.height !== h) {
+    scannerCanvas.width = w;
+    scannerCanvas.height = h;
+  }
+  ctx.drawImage(scannerVideo, 0, 0, w, h);
+  const imageData = ctx.getImageData(0, 0, w, h);
+  const qr = jsQR(imageData.data, w, h, {
+    inversionAttempts: 'dontInvert',
+  });
+  if (qr && qr.data) {
+    handleScannedPayload(qr.data);
+  }
+}
+
+async function scanFrameLoop(): Promise<void> {
   if (!cameraStream) return;
 
   if (
-    now - lastDecodeTime >= SCAN_INTERVAL_MS &&
     scannerVideo.readyState === scannerVideo.HAVE_ENOUGH_DATA &&
     scannerVideo.videoWidth > 0 &&
     scannerVideo.videoHeight > 0
   ) {
-    lastDecodeTime = now;
-    const ctx = scannerCanvas.getContext('2d', {
-      willReadFrequently: true,
-    });
-    if (ctx) {
-      const vw = scannerVideo.videoWidth;
-      const vh = scannerVideo.videoHeight;
-      const scale = vw > MAX_SCAN_WIDTH ? MAX_SCAN_WIDTH / vw : 1;
-      const w = Math.round(vw * scale);
-      const h = Math.round(vh * scale);
-      if (scannerCanvas.width !== w || scannerCanvas.height !== h) {
-        scannerCanvas.width = w;
-        scannerCanvas.height = h;
+    const detector = getNativeBarcodeDetector();
+    if (detector) {
+      try {
+        const barcodes = await detector.detect(scannerVideo);
+        const value = barcodes[0]?.rawValue;
+        if (value) handleScannedPayload(value);
+      } catch {
+        nativeDetector = null;
+        decodeWithJsQr();
       }
-      ctx.drawImage(scannerVideo, 0, 0, w, h);
-      const imageData = ctx.getImageData(0, 0, w, h);
-      const qr = jsQR(imageData.data, w, h, {
-        inversionAttempts: 'attemptBoth',
-      });
-      if (qr && qr.data) {
-        handleScannedPayload(qr.data);
-      }
+    } else {
+      decodeWithJsQr();
     }
   }
 
-  scanRafId = requestAnimationFrame(scanFrameLoop);
+  if (cameraStream) {
+    scanTimerId = window.setTimeout(() => {
+      void scanFrameLoop();
+    }, SCAN_INTERVAL_MS);
+  }
 }
 
 export async function startCamera(): Promise<void> {
@@ -206,11 +250,12 @@ export async function startCamera(): Promise<void> {
   btnToggleCamera.disabled = true;
 
   try {
+    const isNative = Capacitor.isNativePlatform();
     const stream = await navigator.mediaDevices.getUserMedia({
       video: {
         facingMode: { ideal: 'environment' },
-        width: { ideal: 1280 },
-        height: { ideal: 720 },
+        width: { ideal: isNative ? 640 : 1280 },
+        height: { ideal: isNative ? 480 : 720 },
       },
       audio: false,
     });
@@ -226,7 +271,7 @@ export async function startCamera(): Promise<void> {
     scannerVideo.hidden = false;
     cameraPlaceholder.hidden = true;
     btnToggleCamera.textContent = 'Stop Camera';
-    scanRafId = requestAnimationFrame(scanFrameLoop);
+    void scanFrameLoop();
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Camera permission denied';
     cameraPlaceholder.hidden = false;
@@ -238,9 +283,9 @@ export async function startCamera(): Promise<void> {
 }
 
 export function stopCamera(): void {
-  if (scanRafId !== null) {
-    cancelAnimationFrame(scanRafId);
-    scanRafId = null;
+  if (scanTimerId !== null) {
+    window.clearTimeout(scanTimerId);
+    scanTimerId = null;
   }
   if (cameraStream) {
     cameraStream.getTracks().forEach((track) => track.stop());
