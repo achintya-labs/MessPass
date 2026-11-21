@@ -6,7 +6,7 @@ A simple, offline-first web app for managing your daily mess QR coupons.
 
 ## Features
 
-- **Local and Offline**
+- **Local/Offline**
 - **Minimal Storage Footprint**
 - **Offline Multi-Page PDF Accepted**
 - **Time-of-Day Smart Highlighting & Auto-Selection:**
