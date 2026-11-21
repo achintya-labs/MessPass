@@ -127,6 +127,10 @@ function renderDateChips(): void {
     });
     dateChipsBar.appendChild(chip);
   }
+
+  requestAnimationFrame(() => {
+    dateChipsBar.scrollLeft = dateChipsBar.scrollWidth;
+  });
 }
 
 export async function renderPassesForSelectedDate(
