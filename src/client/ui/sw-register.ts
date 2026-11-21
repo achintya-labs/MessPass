@@ -1,7 +1,8 @@
+import { Capacitor } from '@capacitor/core';
 import { PDF_WORKER_URL } from '../../lib/pdf-parser';
 
 export async function registerOfflineServiceWorker(): Promise<void> {
-  if (!('serviceWorker' in navigator)) return;
+  if (Capacitor.isNativePlatform() || !('serviceWorker' in navigator)) return;
   try {
     const registration = await navigator.serviceWorker.register('./sw.js', {
       scope: './',

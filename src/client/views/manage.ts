@@ -1,3 +1,6 @@
+import { Capacitor } from '@capacitor/core';
+import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 import {
   createBackupFileContent,
   createTransferChunks,
@@ -288,17 +291,40 @@ export function initManageView(opts: ManageViewCallbacks): void {
     }
   });
 
-  btnExportTxt.addEventListener('click', () => {
+  btnExportTxt.addEventListener('click', async () => {
     const content = createBackupFileContent();
     if (!content) {
       showToast('No coupons to back up', 'info');
       return;
     }
+    const filename = `mess-pass-backup-${getTodayLocalISO()}.txt`;
+
+    if (Capacitor.isNativePlatform()) {
+      try {
+        const result = await Filesystem.writeFile({
+          path: filename,
+          data: content,
+          directory: Directory.Cache,
+          encoding: Encoding.UTF8,
+        });
+        await Share.share({
+          title: 'Mess Pass Backup',
+          url: result.uri,
+          dialogTitle: 'Save or share backup (.txt)',
+        });
+        showToast('Backup ready to save/share', 'success');
+      } catch (err) {
+        if (err instanceof Error && /cancel/i.test(err.message)) return;
+        showToast('Failed to export backup', 'error');
+      }
+      return;
+    }
+
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `mess-pass-backup-${getTodayLocalISO()}.txt`;
+    a.download = filename;
     document.body.appendChild(a);
     a.click();
     a.remove();

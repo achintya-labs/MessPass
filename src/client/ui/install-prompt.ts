@@ -1,3 +1,4 @@
+import { Capacitor } from '@capacitor/core';
 import { showToast } from './toast';
 
 interface BeforeInstallPromptEvent extends Event {
@@ -40,6 +41,8 @@ function dismissInstallBanner(): void {
 }
 
 export function initInstallPrompt(): void {
+  if (Capacitor.isNativePlatform()) return;
+
   btnInstallApp.addEventListener('click', async () => {
     if (!deferredInstallPrompt) return;
     const promptEvent = deferredInstallPrompt;
