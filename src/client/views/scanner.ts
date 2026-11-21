@@ -1,3 +1,4 @@
+import { Capacitor } from '@capacitor/core';
 import jsQR from 'jsqr';
 import {
   MEAL_LABELS,
@@ -209,6 +210,7 @@ export async function startCamera(): Promise<void> {
     cameraStream = stream;
     scannerVideo.srcObject = stream;
     await scannerVideo.play();
+    scannerVideo.hidden = false;
     cameraPlaceholder.hidden = true;
     btnToggleCamera.textContent = 'Stop Camera';
     scanRafId = requestAnimationFrame(scanFrameLoop);
@@ -232,6 +234,9 @@ export function stopCamera(): void {
     cameraStream = null;
   }
   scannerVideo.srcObject = null;
+  if (Capacitor.isNativePlatform()) {
+    scannerVideo.hidden = true;
+  }
   cameraPlaceholder.hidden = false;
   cameraStatusText.textContent = 'Camera paused. Tap "Start Camera" to scan.';
   btnToggleCamera.textContent = 'Start Camera';
@@ -239,6 +244,9 @@ export function stopCamera(): void {
 
 export function initScannerView(opts: ScannerViewCallbacks): void {
   callbacks = opts;
+  if (Capacitor.isNativePlatform()) {
+    scannerVideo.hidden = true;
+  }
 
   btnResetRx.addEventListener('click', () => {
     rxSession = null;

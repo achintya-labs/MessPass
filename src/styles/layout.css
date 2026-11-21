@@ -78,6 +78,11 @@
   padding: 12px 14px 8px;
 }
 
+.main-content.is-swiping {
+  position: relative;
+  overflow-x: hidden;
+}
+
 .view {
   display: flex;
   flex-direction: column;
@@ -87,6 +92,43 @@
 
 .view[hidden] {
   display: none;
+}
+
+@keyframes viewSlideInRight {
+  from {
+    opacity: 0.45;
+    transform: translateX(26px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes viewSlideInLeft {
+  from {
+    opacity: 0.45;
+    transform: translateX(-26px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.view.is-entering-right {
+  animation: viewSlideInRight 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.view.is-entering-left {
+  animation: viewSlideInLeft 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .view.is-entering-right,
+  .view.is-entering-left {
+    animation: none;
+  }
 }
 
 /* Panels */

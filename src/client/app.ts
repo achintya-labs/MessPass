@@ -1,23 +1,20 @@
 import { getTodayLocalISO } from '../lib/storage';
 import type { TabName } from './types';
-import { closeConfirm, initConfirmModal, isConfirmOpen } from './ui/confirm-modal';
+import { initConfirmModal } from './ui/confirm-modal';
 import { initInstallPrompt } from './ui/install-prompt';
+import { initKeyboardShortcuts } from './ui/keyboard-shortcuts';
+import { initNativeAndroidNavigation } from './ui/native-navigation';
 import { registerOfflineServiceWorker } from './ui/sw-register';
-import {
-  closeTransferModal,
-  initManageView,
-  isTransferModalOpen,
-  refreshStats,
-  stepTransferChunk,
-} from './views/manage';
+import { initManageView, refreshStats } from './views/manage';
 import {
   getSelectedDateISO,
   initPassesView,
   renderPassesForSelectedDate,
   setSelectedDateISO,
-  shiftSelectedDate,
 } from './views/passes';
 import { initScannerView, startCamera, stopCamera } from './views/scanner';
+
+const TAB_ORDER: readonly TabName[] = ['passes', 'scan', 'manage'];
 
 const viewPasses = document.getElementById('view-passes') as HTMLElement;
 const viewScan = document.getElementById('view-scan') as HTMLElement;
@@ -26,18 +23,33 @@ const navButtons = Array.from(
   document.querySelectorAll<HTMLButtonElement>('.nav-item')
 );
 
+const viewsByTab: Record<TabName, HTMLElement> = {
+  passes: viewPasses,
+  scan: viewScan,
+  manage: viewManage,
+};
+
 let activeTab: TabName = 'passes';
 
-function switchTab(tab: TabName): void {
+function switchTab(tab: TabName, options: { animate?: boolean } = {}): void {
+  const { animate = true } = options;
+  const prevIdx = TAB_ORDER.indexOf(activeTab);
+  const nextIdx = TAB_ORDER.indexOf(tab);
   activeTab = tab;
 
-  viewPasses.hidden = tab !== 'passes';
-  viewScan.hidden = tab !== 'scan';
-  viewManage.hidden = tab !== 'manage';
+  for (const [name, el] of Object.entries(viewsByTab) as Array<[TabName, HTMLElement]>) {
+    el.hidden = name !== tab;
+    el.classList.toggle('is-active', name === tab);
+    el.classList.remove('is-entering-right', 'is-entering-left');
+  }
 
-  viewPasses.classList.toggle('is-active', tab === 'passes');
-  viewScan.classList.toggle('is-active', tab === 'scan');
-  viewManage.classList.toggle('is-active', tab === 'manage');
+  if (animate && prevIdx !== nextIdx) {
+    const targetView = viewsByTab[tab];
+    void targetView.offsetWidth;
+    targetView.classList.add(
+      nextIdx > prevIdx ? 'is-entering-right' : 'is-entering-left'
+    );
+  }
 
   navButtons.forEach((btn) => {
     const isCurrent = btn.dataset.tab === tab;
@@ -69,46 +81,6 @@ navButtons.forEach((btn) => {
   });
 });
 
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    if (isConfirmOpen()) {
-      closeConfirm();
-      return;
-    }
-    if (isTransferModalOpen()) {
-      closeTransferModal();
-      return;
-    }
-  }
-
-  if (isTransferModalOpen()) {
-    if (e.key === 'ArrowLeft') {
-      e.preventDefault();
-      stepTransferChunk(-1);
-    } else if (e.key === 'ArrowRight') {
-      e.preventDefault();
-      stepTransferChunk(1);
-    }
-    return;
-  }
-
-  const activeEl = document.activeElement;
-  const isTyping =
-    activeEl instanceof HTMLInputElement ||
-    activeEl instanceof HTMLTextAreaElement ||
-    activeEl instanceof HTMLSelectElement;
-
-  if (!isTyping && !isConfirmOpen() && activeTab === 'passes') {
-    if (e.key === 'ArrowLeft') {
-      e.preventDefault();
-      shiftSelectedDate(-1);
-    } else if (e.key === 'ArrowRight') {
-      e.preventDefault();
-      shiftSelectedDate(1);
-    }
-  }
-});
-
 // Auto-refresh time-of-day meal highlight every minute when viewing Today
 window.setInterval(() => {
   if (activeTab === 'passes' && getSelectedDateISO() === getTodayLocalISO()) {
@@ -128,6 +100,13 @@ document.addEventListener('visibilitychange', () => {
 
 // --- Init ---
 initConfirmModal();
+initKeyboardShortcuts(() => activeTab);
+initNativeAndroidNavigation({
+  tabOrder: TAB_ORDER,
+  viewsByTab,
+  getActiveTab: () => activeTab,
+  switchTab,
+});
 initPassesView({
   onNavigateTab: switchTab,
   onCouponsChanged: refreshStats,
