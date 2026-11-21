@@ -1,5 +1,5 @@
-const CACHE_NAME = 'mess-pass-v4';
-const APP_SHELL = ['./', './manifest.json', './icon.svg'];
+const CACHE_NAME = 'mess-pass-v5';
+const APP_SHELL = ['./', './manifest.json', './icon.svg', './icon-192.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(

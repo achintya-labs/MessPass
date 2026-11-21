@@ -141,6 +141,9 @@ describe('Static Build Output & Zero-Backend Privacy Verification', () => {
       'btn-transfer-prev',
       'btn-transfer-next',
       'confirm-modal',
+      'install-banner',
+      'btn-install-app',
+      'btn-dismiss-install',
     ];
 
     for (const id of requiredIds) {
