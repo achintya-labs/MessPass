@@ -64,16 +64,18 @@ jobs:
             APK_SRC="android/app/build/outputs/apk/release/app-release.apk"
             APK_OUT="MessPass-${TAG_NAME}.apk"
             cp "$APK_SRC" "$APK_OUT"
+            echo "signed=true" >> "$GITHUB_OUTPUT"
           else
             (cd android && ./gradlew assembleDebug)
             APK_SRC="android/app/build/outputs/apk/debug/app-debug.apk"
             APK_OUT="MessPass-${TAG_NAME}-debug.apk"
             cp "$APK_SRC" "$APK_OUT"
+            echo "signed=false" >> "$GITHUB_OUTPUT"
           fi
           echo "apk_path=$APK_OUT" >> "$GITHUB_OUTPUT"
 
       - name: Verify release APK signature
-        if: secrets.ANDROID_KEYSTORE_BASE64 != ''
+        if: steps.build_apk.outputs.signed == 'true'
         run: npm run android:verify
 
       - name: Create GitHub Release
