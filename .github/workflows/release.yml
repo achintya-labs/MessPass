@@ -56,7 +56,33 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          TAG_NAME="${GITHUB_REF_NAME:-dev}"
+          TAG_NAME="${GITHUB_REF_NAME:-v1.0.0}"
+          VER_NAME="${TAG_NAME#v}"
+          VER_NAME="${VER_NAME%-app}"
+          VER_NAME="${VER_NAME%-web}"
+
+          if [[ "$VER_NAME" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+) ]]; then
+            MAJOR="${BASH_REMATCH[1]}"
+            MINOR="${BASH_REMATCH[2]}"
+            PATCH="${BASH_REMATCH[3]}"
+            if [[ "$VER_NAME" == *"-beta"* ]]; then
+              BETA_NUM=0
+              if [[ "$VER_NAME" =~ beta\.?([0-9]+) ]]; then
+                BETA_NUM="${BASH_REMATCH[1]}"
+              fi
+              PRE_OFFSET=$(( BETA_NUM < 98 ? BETA_NUM : 98 ))
+            else
+              PRE_OFFSET=99
+            fi
+            VER_CODE=$(( MAJOR * 1000000 + MINOR * 10000 + PATCH * 100 + PRE_OFFSET ))
+          else
+            VER_CODE="${GITHUB_RUN_NUMBER:-1}"
+          fi
+
+          export APP_VERSION_NAME="$VER_NAME"
+          export APP_VERSION_CODE="$VER_CODE"
+          echo "Building Android versionName=$APP_VERSION_NAME versionCode=$APP_VERSION_CODE"
+
           if [ -n "$ANDROID_KEYSTORE_BASE64" ]; then
             echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/messpass-release.jks
             export KEYSTORE_FILE="../messpass-release.jks"

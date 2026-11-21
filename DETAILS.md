@@ -108,6 +108,9 @@ Web and Android share the exact same UI, with native-only behaviors gated behind
 | **`v*-app*`** | `v1.0.1-app` | Yes | Yes | **Skipped** |
 | **`v*-beta*`** | `v1.0.0-beta`, `v1.0.0-beta-app` | Yes | Marks GitHub Release as **Pre-release** (unless `-web`) | Unless `-app` |
 
+### Automatic App Versioning
+`android/app/build.gradle` reads `APP_VERSION_NAME` and `APP_VERSION_CODE` (defaulting to `"1.0"` / `1` locally). In CI, `v<major>.<minor>.<patch>` sets `versionName` (with leading `v` and `-app`/`-web` stripped) and computes a monotonically increasing `versionCode` (`major*1000000 + minor*10000 + patch*100 + offset`, where `-beta` uses `0..98` and stable uses `99` so stable upgrades cleanly over beta).
+
 ### Required GitHub Secrets
 Configure under **Settings → Secrets and variables → Actions**:
 - **Android Signing** *(if omitted, falls back to building & attaching `app-debug.apk`)*:
