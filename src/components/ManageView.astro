@@ -1,0 +1,154 @@
+---
+// VIEW 3: Manage Coupons (Import / Transfer / Backup / Cleanup)
+---
+
+<section id="view-manage" class="view" aria-label="Manage Coupons" hidden>
+  <!-- Storage Footprint Card -->
+  <div class="panel">
+    <div class="panel-header">
+      <div>
+        <h2 class="panel-title">Local Storage</h2>
+        <p class="panel-subtitle">
+          Stored privately on this device (<code>mc_v1</code>)
+        </p>
+      </div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-value" id="stat-total">0</span>
+        <span class="stat-label">Passes</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="stat-dates">0</span>
+        <span class="stat-label">Days</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="stat-expired">0</span>
+        <span class="stat-label">Expired</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="stat-bytes">0 B</span>
+        <span class="stat-label">Size</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="manage-columns">
+    <!-- PDF Ingestion Card -->
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <h2 class="panel-title">Import PDF</h2>
+          <p class="panel-subtitle">
+            Extracts meal &amp; QR code from each page offline
+          </p>
+        </div>
+      </div>
+
+      <label class="file-dropzone" id="pdf-dropzone">
+        <input
+          type="file"
+          id="pdf-file-input"
+          accept=".pdf,application/pdf"
+          multiple
+          hidden
+        />
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="12" y1="18" x2="12" y2="12"></line>
+          <polyline points="9 15 12 12 15 15"></polyline>
+        </svg>
+        <span class="dropzone-title">Drop PDF here or click to browse</span>
+        <span class="dropzone-hint">Processed 100% offline</span>
+      </label>
+
+      <div id="pdf-progress-wrap" class="progress-wrap" hidden>
+        <div class="progress-meta">
+          <span id="pdf-progress-label">Reading PDF...</span>
+          <span id="pdf-progress-pct">0%</span>
+        </div>
+        <div class="progress-track">
+          <div id="pdf-progress-bar" class="progress-bar" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <div id="pdf-result" class="pdf-result" hidden></div>
+    </div>
+
+    <!-- Device Transfer & Backup Card -->
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <h2 class="panel-title">Transfer &amp; Backup</h2>
+          <p class="panel-subtitle">
+            Move passes via QR or <code>.txt</code> file
+          </p>
+        </div>
+      </div>
+
+      <div class="action-stack">
+        <button
+          type="button"
+          id="btn-show-transfer-qr"
+          class="btn btn-primary btn-full"
+        >
+          Show Transfer QR
+        </button>
+
+        <div class="action-row">
+          <button
+            type="button"
+            id="btn-export-txt"
+            class="btn btn-compact btn-secondary"
+          >
+            Download Backup (.txt)
+          </button>
+          <label class="btn btn-compact btn-secondary file-btn-label">
+            Restore Backup (.txt)
+            <input
+              type="file"
+              id="txt-restore-input"
+              accept=".txt,text/plain"
+              hidden
+            />
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bulk Deletion Card -->
+  <div class="panel panel-danger">
+    <div class="panel-header">
+      <div>
+        <h2 class="panel-title">Cleanup</h2>
+        <p class="panel-subtitle">Delete old or unwanted passes</p>
+      </div>
+    </div>
+
+    <div class="action-stack danger-actions-grid">
+      <button
+        type="button"
+        id="btn-delete-selected-date"
+        class="btn btn-compact btn-danger-outline btn-full"
+      >
+        Delete Selected Date
+      </button>
+      <button
+        type="button"
+        id="btn-delete-expired"
+        class="btn btn-compact btn-danger-outline btn-full"
+      >
+        Delete Expired
+      </button>
+      <button
+        type="button"
+        id="btn-wipe-all"
+        class="btn btn-compact btn-danger btn-full"
+      >
+        Wipe All
+      </button>
+    </div>
+  </div>
+</section>

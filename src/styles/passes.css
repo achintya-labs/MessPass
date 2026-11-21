@@ -1,0 +1,527 @@
+/* Minimal Passes Toolbar & Nondescript Date Controls */
+.passes-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 2px 2px 0;
+}
+
+.day-summary-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.day-readable {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.day-pass-count {
+  font-size: 0.76rem;
+  color: var(--accent-fg);
+  font-weight: 500;
+}
+
+.day-pass-count:empty {
+  display: none;
+}
+
+.date-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.subtle-icon-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.subtle-icon-btn:hover {
+  color: var(--text);
+  background: var(--surface-alt);
+  border-color: var(--border);
+}
+
+.subtle-icon-btn:active {
+  transform: scale(0.95);
+}
+
+.date-icon-wrap {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.date-icon-wrap .subtle-icon-btn {
+  position: relative;
+  z-index: 2;
+}
+
+.date-input-hidden {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.today-btn {
+  height: 30px;
+  padding: 0 9px;
+  border-radius: 7px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.today-btn:hover {
+  color: var(--text);
+  background: var(--surface-alt);
+}
+
+.today-btn.is-today {
+  color: var(--accent-fg);
+}
+
+/* Quick Saved Dates Strip */
+.date-chips-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 2px 0;
+  scrollbar-width: none;
+}
+
+.date-chips-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.date-chips-bar[hidden] {
+  display: none;
+}
+
+.date-chip {
+  flex-shrink: 0;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 0.74rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.date-chip:hover {
+  border-color: var(--primary);
+  color: var(--text);
+}
+
+.date-chip.is-active {
+  background: var(--accent-soft);
+  border-color: var(--primary);
+  color: var(--accent-fg);
+}
+
+/* Swipeable Pass Carousel (Mobile) */
+.passes-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  width: 100%;
+}
+
+.pass-carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  width: 100%;
+  margin: 0;
+}
+
+.pass-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.pass-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  padding: 4px 0 8px;
+}
+
+.pass-card {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+  transition: opacity 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pass-card.is-relevant {
+  border-color: var(--primary);
+  box-shadow:
+    0 0 0 2px rgba(59, 130, 246, 0.28),
+    var(--shadow);
+}
+
+.pass-card.is-dimmed {
+  opacity: 0.48;
+}
+
+.pass-card.is-dimmed:hover,
+.pass-card.is-dimmed:focus-within {
+  opacity: 0.96;
+}
+
+.pass-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-width: 0;
+}
+
+.pass-card-badges {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  min-width: 0;
+}
+
+.meal-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.meal-b {
+  background: rgba(245, 158, 11, 0.16);
+  color: #fcd34d;
+}
+
+.meal-l {
+  background: rgba(16, 185, 129, 0.16);
+  color: #6ee7b7;
+}
+
+.meal-s {
+  background: rgba(249, 115, 22, 0.18);
+  color: #fdba74;
+}
+
+.meal-d {
+  background: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+}
+
+.meal-u {
+  background: rgba(148, 163, 184, 0.16);
+  color: #cbd5e1;
+}
+
+.relevance-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.relevance-active {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.relevance-upcoming {
+  background: var(--accent-soft);
+  color: var(--accent-fg);
+}
+
+.delete-coupon-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.delete-coupon-btn:hover,
+.delete-coupon-btn:active {
+  color: var(--danger);
+  border-color: rgba(239, 68, 68, 0.35);
+  background: var(--danger-soft);
+}
+
+/* High-contrast pure-white QR frame for reliable optical scanning */
+.qr-frame,
+.transfer-qr-frame {
+  width: 100%;
+  min-width: 0;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.qr-svg-host {
+  display: block;
+  width: 100%;
+  max-width: min(100%, 48dvh);
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+}
+
+.transfer-qr-frame .qr-svg-host {
+  max-width: min(100%, 50dvh);
+}
+
+.qr-svg-host svg {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+  shape-rendering: crispEdges;
+}
+
+.pass-card-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  min-width: 0;
+}
+
+.pass-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.78rem;
+  min-width: 0;
+}
+
+.pass-meta-label {
+  color: var(--text-muted);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.pass-meta-value {
+  font-weight: 600;
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.pass-meta-timing {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.pass-meta-code {
+  font-weight: 600;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  padding: 1px 6px;
+  border-radius: 5px;
+  text-align: right;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Pagination Dots */
+.carousel-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 14px;
+}
+
+.carousel-dots[hidden] {
+  display: none;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: none;
+  padding: 0;
+  background: var(--border);
+  cursor: pointer;
+  transition: width 0.2s ease, background 0.2s ease;
+}
+
+.carousel-dot.is-relevant-dot {
+  background: rgba(59, 130, 246, 0.5);
+}
+
+.carousel-dot.is-active {
+  width: 22px;
+  background: var(--primary);
+}
+
+/* Empty State */
+.empty-state {
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: 16px;
+  padding: 28px 18px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.empty-state[hidden] {
+  display: none;
+}
+
+.empty-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--surface-alt);
+  color: var(--text-muted);
+  display: grid;
+  place-items: center;
+  margin-bottom: 2px;
+}
+
+.empty-title {
+  margin: 0;
+  font-size: 0.96rem;
+}
+
+.empty-desc {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  max-width: 260px;
+}
+
+.empty-jump-wrap {
+  margin-top: 4px;
+}
+
+.empty-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+@media (min-width: 820px) {
+  .day-readable {
+    font-size: 1.15rem;
+  }
+
+  .day-pass-count {
+    font-size: 0.8rem;
+  }
+
+  /* Responsive Desktop Grid: 4 cards fit comfortably within 980px without overflow or overlap */
+  .pass-carousel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 224px));
+    justify-content: center;
+    gap: 14px;
+    margin: 0;
+    padding: 4px 0 8px;
+    overflow: visible;
+  }
+
+  .pass-slide {
+    flex: none;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    scroll-snap-align: none;
+    padding: 0;
+  }
+
+  .pass-card {
+    max-width: 100%;
+    height: 100%;
+    padding: 12px;
+  }
+
+  .pass-card:hover {
+    border-color: rgba(59, 130, 246, 0.55);
+  }
+
+  .qr-svg-host {
+    max-width: 164px;
+  }
+
+  .empty-state {
+    max-width: 460px;
+    width: 100%;
+    margin: 20px auto;
+    padding: 36px 24px;
+  }
+}

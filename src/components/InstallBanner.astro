@@ -1,0 +1,34 @@
+---
+// Add as App Popup Banner
+---
+
+<div
+  id="install-banner"
+  class="install-banner"
+  role="dialog"
+  aria-label="Add Mess Pass as an app"
+  hidden
+>
+  <img src="./icon-192.png" alt="" class="install-icon" width="36" height="36" />
+  <div class="install-copy">
+    <strong class="install-title">Add as App</strong>
+    <span id="install-desc" class="install-desc">
+      Quick offline access from your home screen
+    </span>
+  </div>
+  <button type="button" id="btn-install-app" class="btn btn-compact btn-primary">
+    Add
+  </button>
+  <button
+    type="button"
+    id="btn-dismiss-install"
+    class="subtle-icon-btn install-close"
+    aria-label="Dismiss install prompt"
+    title="Dismiss"
+  >
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  </button>
+</div>

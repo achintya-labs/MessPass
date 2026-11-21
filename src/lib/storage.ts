@@ -82,26 +82,26 @@ export const MEAL_LABELS: Record<MealType, string> = {
 };
 
 export const MEAL_WINDOWS: readonly MealWindow[] = [
-  { meal: 'B', startMinutes: 7 * 60, endMinutes: 10 * 60, label: '7:00 – 10:00 AM' },
-  { meal: 'L', startMinutes: 12 * 60, endMinutes: 14 * 60 + 30, label: '12:00 – 2:30 PM' },
-  { meal: 'S', startMinutes: 16 * 60 + 30, endMinutes: 17 * 60 + 30, label: '4:30 – 5:30 PM' },
-  { meal: 'D', startMinutes: 19 * 60, endMinutes: 21 * 60 + 30, label: '7:00 – 9:30 PM' },
+  { meal: 'B', startMinutes: 7 * 60, endMinutes: 10 * 60, label: '7:00 - 10:00 AM' },
+  { meal: 'L', startMinutes: 12 * 60, endMinutes: 14 * 60 + 30, label: '12:00 - 2:30 PM' },
+  { meal: 'S', startMinutes: 16 * 60 + 30, endMinutes: 17 * 60 + 30, label: '4:30 - 5:30 PM' },
+  { meal: 'D', startMinutes: 19 * 60, endMinutes: 21 * 60 + 30, label: '7:00 - 9:30 PM' },
 ] as const;
 
 export const MEAL_TIMING_LABELS: Partial<Record<MealType, string>> = {
-  B: '7:00 – 10:00 AM',
-  L: '12:00 – 2:30 PM',
-  S: '4:30 – 5:30 PM',
-  D: '7:00 – 9:30 PM',
+  B: '7:00 - 10:00 AM',
+  L: '12:00 - 2:30 PM',
+  S: '4:30 - 5:30 PM',
+  D: '7:00 - 9:30 PM',
 };
 
 /**
  * Determines which meal pass is currently active (or next upcoming) for the
  * given local time of day:
- * - Breakfast: 7:00 – 10:00
- * - Lunch:     12:00 – 14:30
- * - Snacks:    16:30 – 17:30
- * - Dinner:    19:00 – 21:30
+ * - Breakfast: 7:00 - 10:00
+ * - Lunch:     12:00 - 14:30
+ * - Snacks:    16:30 - 17:30
+ * - Dinner:    19:00 - 21:30
  */
 export function getRelevantMealForTime(now: Date = new Date()): RelevantMealInfo {
   const minutes = now.getHours() * 60 + now.getMinutes();

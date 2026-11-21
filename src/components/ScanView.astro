@@ -1,0 +1,126 @@
+---
+// VIEW 2: Camera QR Scanner
+---
+
+<section id="view-scan" class="view" aria-label="Camera QR Scanner" hidden>
+  <div class="scan-layout">
+    <div class="panel scan-camera-panel">
+      <div class="panel-header">
+        <div>
+          <h2 class="panel-title">QR Scanner</h2>
+          <p class="panel-subtitle">
+            Scan mess coupons or <code>MC1:</code> transfer QRs
+          </p>
+        </div>
+        <button
+          type="button"
+          id="btn-toggle-camera"
+          class="btn btn-sm btn-secondary"
+        >
+          Start Camera
+        </button>
+      </div>
+
+      <!-- Camera Preview -->
+      <div class="camera-box" id="camera-box">
+        <video
+          id="scanner-video"
+          class="scanner-video"
+          playsinline
+          muted
+          autoplay
+        ></video>
+        <canvas id="scanner-canvas" hidden></canvas>
+        <div class="scanner-overlay" aria-hidden="true">
+          <div class="scanner-reticle"></div>
+        </div>
+        <div id="camera-placeholder" class="camera-placeholder">
+          <p id="camera-status-text">Tap "Start Camera" to scan QR codes</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel scan-controls-panel">
+      <!-- Meal Tag Selector -->
+      <div class="meal-selector-block">
+        <span class="field-label">Meal Tag</span>
+        <div
+          id="scan-meal-group"
+          class="segmented-control"
+          role="radiogroup"
+          aria-label="Meal tag"
+        >
+          <button
+            type="button"
+            class="seg-btn is-selected"
+            data-meal="AUTO"
+            aria-checked="true"
+            role="radio"
+          >
+            Auto
+          </button>
+          <button
+            type="button"
+            class="seg-btn"
+            data-meal="B"
+            aria-checked="false"
+            role="radio"
+          >
+            Breakfast
+          </button>
+          <button
+            type="button"
+            class="seg-btn"
+            data-meal="L"
+            aria-checked="false"
+            role="radio"
+          >
+            Lunch
+          </button>
+          <button
+            type="button"
+            class="seg-btn"
+            data-meal="S"
+            aria-checked="false"
+            role="radio"
+          >
+            Snacks
+          </button>
+          <button
+            type="button"
+            class="seg-btn"
+            data-meal="D"
+            aria-checked="false"
+            role="radio"
+          >
+            Dinner
+          </button>
+        </div>
+        <p class="field-hint">
+          Leave on <strong>Auto</strong> to preserve existing tags, or pick a meal to tag scanned passes.
+        </p>
+      </div>
+
+      <!-- Scan Feedback -->
+      <div id="scan-feedback" class="feedback-banner" hidden></div>
+
+      <!-- Transfer Chunk Assembly Progress -->
+      <div id="transfer-rx-card" class="transfer-rx-card" hidden>
+        <div class="transfer-rx-header">
+          <div>
+            <strong>Device Transfer</strong>
+            <div id="transfer-rx-count" class="muted-text">0 / 0 chunks</div>
+          </div>
+          <button
+            type="button"
+            id="btn-reset-rx"
+            class="btn btn-sm btn-ghost"
+          >
+            Reset
+          </button>
+        </div>
+        <div id="transfer-rx-pills" class="chunk-pills"></div>
+      </div>
+    </div>
+  </div>
+</section>

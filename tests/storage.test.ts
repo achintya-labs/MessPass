@@ -382,7 +382,7 @@ describe('Time-of-Day Relevant Meal Selection', () => {
     assert.deepEqual(getRelevantMealForTime(atTime(7, 0)), {
       meal: 'B',
       status: 'active',
-      windowLabel: '7:00 – 10:00 AM',
+      windowLabel: '7:00 - 10:00 AM',
     });
     assert.equal(getRelevantMealForTime(atTime(10, 0)).meal, 'B');
     assert.equal(getRelevantMealForTime(atTime(10, 0)).status, 'active');
@@ -391,7 +391,7 @@ describe('Time-of-Day Relevant Meal Selection', () => {
     assert.deepEqual(getRelevantMealForTime(atTime(12, 0)), {
       meal: 'L',
       status: 'active',
-      windowLabel: '12:00 – 2:30 PM',
+      windowLabel: '12:00 - 2:30 PM',
     });
     assert.equal(getRelevantMealForTime(atTime(14, 30)).meal, 'L');
     assert.equal(getRelevantMealForTime(atTime(14, 30)).status, 'active');
@@ -400,7 +400,7 @@ describe('Time-of-Day Relevant Meal Selection', () => {
     assert.deepEqual(getRelevantMealForTime(atTime(16, 30)), {
       meal: 'S',
       status: 'active',
-      windowLabel: '4:30 – 5:30 PM',
+      windowLabel: '4:30 - 5:30 PM',
     });
     assert.equal(getRelevantMealForTime(atTime(17, 30)).meal, 'S');
     assert.equal(getRelevantMealForTime(atTime(17, 30)).status, 'active');
@@ -409,7 +409,7 @@ describe('Time-of-Day Relevant Meal Selection', () => {
     assert.deepEqual(getRelevantMealForTime(atTime(19, 0)), {
       meal: 'D',
       status: 'active',
-      windowLabel: '7:00 – 9:30 PM',
+      windowLabel: '7:00 - 9:30 PM',
     });
     assert.equal(getRelevantMealForTime(atTime(21, 30)).meal, 'D');
     assert.equal(getRelevantMealForTime(atTime(21, 30)).status, 'active');
