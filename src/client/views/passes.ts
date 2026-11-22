@@ -1,3 +1,4 @@
+import { Capacitor } from '@capacitor/core';
 import {
   MEAL_LABELS,
   deleteCoupon,
@@ -371,7 +372,25 @@ export function initPassesView(opts: PassesViewCallbacks): void {
     void renderPassesForSelectedDate({ autoSelectRelevant: true });
   });
 
+  const win = window as Window & {
+    AndroidDatePicker?: { open: (iso: string) => void };
+    __onAndroidDatePicked?: (iso: string) => void;
+  };
+
+  if (Capacitor.isNativePlatform()) {
+    win.__onAndroidDatePicked = (iso: string) => {
+      if (!iso) return;
+      selectedDateISO = iso;
+      activePassIndex = 0;
+      void renderPassesForSelectedDate();
+    };
+  }
+
   calendarTrigger.addEventListener('click', () => {
+    if (Capacitor.isNativePlatform() && win.AndroidDatePicker) {
+      win.AndroidDatePicker.open(selectedDateISO);
+      return;
+    }
     try {
       if (typeof datePicker.showPicker === 'function') {
         datePicker.showPicker();
