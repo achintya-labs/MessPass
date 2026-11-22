@@ -14,6 +14,8 @@ export interface NativeNavigationOptions {
 export function initNativeAndroidNavigation(opts: NativeNavigationOptions): void {
   if (!Capacitor.isNativePlatform()) return;
 
+  document.body.classList.add('is-native-app');
+
   const win = window as Window & { __handleAndroidBack?: () => boolean };
   win.__handleAndroidBack = () => {
     if (isConfirmOpen()) {

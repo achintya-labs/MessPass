@@ -41,6 +41,18 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+body.is-native-app {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+body.is-native-app input,
+body.is-native-app textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 button,
 input {
   font: inherit;
